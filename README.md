@@ -1,0 +1,2 @@
+# Books
+BOOKS: The utility of this program is to help you keep a record of all the books you've read along the years. So far you can add some information and details together with the names of the books you add, for instance author, genre and rating. The date will be added automatically too. This small piece of software is under development. Developed by Fernando Gaston Ramirez in 2022 on Qbasic 7.1. Brazil.
