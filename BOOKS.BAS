@@ -1,4 +1,4 @@
-' BOOKS: The utility of this program is to help you keep a record of all the
+' BOOKS 0.2: The utility of this program is to help you keep a record of all the
 ' books you've read along the years. So far you can add some information
 ' and details together with the names of the books you add, for instance
 ' author and genre. This small piece of software is under development.
@@ -14,7 +14,10 @@ DECLARE SUB About ()
 
 '========================== VARIABLES ==========================
 
+
 DIM SHARED booknumber, name$(100), author$(100), genre$(100), rating(100), daydate$(100)
+
+MENUITEM = 1
 
 ' DIM SHARED turns local variables into GLOBAL VARIABLES, that way they can
 ' be also usable in SUB routines and FUNCTIONS.
@@ -27,12 +30,21 @@ CALL load
 
 inicio:
 
-COLOR , 0
+
+IF MENUITEM > 5 THEN
+MENUITEM = 1
+END IF
+
+IF MENUITEM < 1 THEN
+MENUITEM = 5
+END IF
+
+
 CLS
 PRINT
 COLOR 4, 7
 LOCATE , 28
-PRINT "      Books V0.1      "
+PRINT "      Books V0.2      "
 COLOR 7, 1
 LOCATE , 28
 PRINT "  FGR Software 2022   "
@@ -44,43 +56,103 @@ COLOR 7
 
 LOCATE , 25
 PRINT "                            "
+
+IF MENUITEM = 1 THEN
+COLOR 0, 7
+END IF
+
 LOCATE , 25
 PRINT "   1) Add Finished Book     "
+COLOR 7, 1
+
+IF MENUITEM = 2 THEN
+COLOR 0, 7
+END IF
+
 LOCATE , 25
 PRINT "   2) Show All Read Books   "
+COLOR 7, 1
+
+IF MENUITEM = 3 THEN
+COLOR 0, 7
+END IF
+
 LOCATE , 25
 PRINT "   3) Erase all data        "
-LOCATE , 25
+COLOR 7, 1
+
+IF MENUITEM = 4 THEN
+COLOR 0, 7
+END IF
+
 LOCATE , 25
 PRINT "   4) About Books           "
+COLOR 7, 1
+
 LOCATE , 25
 PRINT "                            "
+
+IF MENUITEM = 5 THEN
+COLOR 0, 7
+END IF
+
 LOCATE , 25
 PRINT "   10) Exit                 "
+COLOR 7, 1
+
 LOCATE , 25
 PRINT "                            "
 PRINT
 
-COLOR 7, 0
-LOCATE , 25
-INPUT "Option: ", opcion
+' LOOP FOR KEYS RECOGNITION
+' SELECT CASE + INKEY$ FOR A FASTER REACTION.
+' MUCH BETTER AND FASTER THAN IF...THEN.
 
-SELECT CASE opcion
-CASE 1
-CALL addbook
-GOTO inicio
-CASE 2
-CALL showbooks
-GOTO inicio
-CASE 3
-CALL ResetFile
-GOTO inicio
-CASE 4
-CALL About
-CASE 10
-CALL save
-END
+
+COLOR , 0
+
+DO
+SELECT CASE INKEY$
+
+        CASE CHR$(0) + CHR$(72)
+        MENUITEM = MENUITEM - 1
+        GOTO inicio
+
+        CASE CHR$(0) + CHR$(80)
+        MENUITEM = MENUITEM + 1
+        GOTO inicio
+        
+        CASE CHR$(27)
+        END
+
+        CASE CHR$(13)
+
+        SELECT CASE MENUITEM
+
+                CASE 1
+                CALL addbook
+                GOTO inicio
+
+                CASE 2
+                CALL showbooks
+                GOTO inicio
+              
+                CASE 3
+                CALL ResetFile
+                GOTO inicio
+
+                CASE 4
+                CALL About
+                GOTO inicio
+
+                CASE 5
+                CALL save
+                END
+
+        END SELECT
+
 END SELECT
+LOOP
 
 GOTO inicio
 
@@ -94,6 +166,7 @@ PRINT "author, genre and rating. The date will be added automatically too. This"
 PRINT "small piece of software is under development."
 PRINT
 PRINT "Developed by Fernando Gaston Ramirez in 2022 on Qbasic 7.1. Brazil."
+PRINT "[Last Update: 0.2 version - March, 2022]"
 PRINT ""
 
 DO WHILE INKEY$ = ""
@@ -172,12 +245,21 @@ END SUB
 
 SUB NOTES
 
-' - Add and improve the MAIN MENU.
-' - Add RATINGS from 1 to 5 for books
+'THINGS TO DO & IMPROVE
 
+
+
+
+'===============================================
+
+'ALREADY DONE
+
+'[v 0.2 - March 2022]
 
 ' - DATE added to the books details
 ' - ARE YOU SURE? - question added when trying to delete records
+' - Add and improve the MAIN MENU.
+' - Add RATINGS from 1 to 5 for books
 
 END SUB
 
