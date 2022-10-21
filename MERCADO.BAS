@@ -9,7 +9,7 @@ DECLARE SUB Mercado1 ()
 ' Para evitar errores al compilar en FREEBASIC, declarar variables de la
 ' siguiente manera, no utilizar COMAS. Cada variable debe estar declarada
 ' de forma correcta sin sufijos $ al final de las variables. Por ejemplo
-' no se puede colocar NombreMercado$, dará error.
+' no se puede colocar NombreMercado$, da error.
 
 'ABSOLUTAMENTE TODAS las variables utilizadas en el programa, deberán ser
 'declaradas al comienzo del codigo.
@@ -19,9 +19,9 @@ DECLARE SUB Mercado1 ()
 
 'Ej: CALL WaitKey --> ERRADO // WaitKey --> CORRECTO
 
-'Las ventajas de compilar con FREE BASIC es que podemos disponibilizar
+'La ventaja de compilar con FREE BASIC es que podemos disponibilizar
 'nuestros programas escritos en QBASIC en WINDOWS 64, WINDOWS32,
-'MSDOS y LINUX. Quienes usen MAC pueden correr una versión de Win64 o
+'MSDOS y LINUX. Quienes usen MAC pueden correr una version de Win64 o
 'Win32 usando WINE.
 
 DIM SHARED ProdutoA(1000) AS STRING
@@ -35,6 +35,9 @@ DIM SHARED loopx AS INTEGER
 DIM SHARED x AS INTEGER
 
 Load
+
+MenuPrincipal:
+opcion = 0
 CLS
 
 PRINT "1- Lista de Produtos Mercado1"
@@ -50,6 +53,7 @@ SELECT CASE opcion
         Mercado1
 END SELECT
 
+GOTO  MenuPrincipal
 
 'mercado2:
 'INPUT "Nome do Produto:"; produtoB$(1)
@@ -91,7 +95,6 @@ loopx = loopx + 1
 LOOP
 
 WaitKey
-END
 
 END SUB
 
@@ -140,14 +143,25 @@ NomeMercado1 = "Valor"
 
 PRINT
 INPUT "Nome do Produto:"; nome
+nome = UCASE$(nome)               'UCASE$ pasa cualquier STRING
+                                  'a mayusculas. LCASE$ hace lo
+                                  'contrario.
 
 '====================================================================
                                         
-loopx = 0                         '1- CHEQUEA SI EL NOMBRE DEL PRODUCTO
-DO UNTIL loopx = 1000             'SE ENCUENTRA ENTRE LOS ITEMS DEL
-                                  'MERCADO1.
-
-IF nome = ProdutoA(loopx) THEN
+loopx = 0                         
+DO UNTIL loopx = 1000             
+                                 
+								 '1- SI ENCUENTRA UN LUGAR VACIO EN LA LISTA
+IF ProdutoA(loopx) = "" THEN	 'SIGNIFICA QUE NO HAY MÁS PRODUCTOS. TERMINA
+        NumeroDeProduto = loopx  'LA BUSQUEDA Y COLOCA EN ESE ESPACIO EL PRODUCTO.
+        ProdutoA(loopx) = nome  
+        PRINT "Produto Novo. ID "; NumeroDeProduto; "."
+        GOTO SkipLoop
+END IF
+								 '2- CHEQUEA SI EL NOMBRE DEL PRODUCTO
+								 'SE ENCUENTRA ENTRE LOS ITEMS DEL	
+IF nome = ProdutoA(loopx) THEN	 'MERCADO.
         NumeroDeProduto = loopx
         ProdutoA(NumeroDeProduto) = nome
         PRINT "Produto achado na lista. ID "; NumeroDeProduto; "."
@@ -159,19 +173,13 @@ LOOP
 
 '====================================================================
 
-loopx = 0                     '2- SI EL NOMBRE DEL PRODUCTO NO FUE ENCONTRADO
-DO UNTIL loopx = 1000         'BUSCA UN LUGAR VACIO EN LA LISTA DE PRODUCTOS
+'loopx = 0                     '2- SI EL NOMBRE DEL PRODUCTO NO FUE ENCONTRADO
+'DO UNTIL loopx = 1000         'BUSCA UN LUGAR VACIO EN LA LISTA DE PRODUCTOS
                               'PARA PODER COLOCAR EL NUEVO ITEM.
 
-IF ProdutoA(loopx) = "" THEN
-        NumeroDeProduto = loopx
-        ProdutoA(loopx) = nome
-        PRINT "Produto Novo. ID "; NumeroDeProduto; "."
-        GOTO SkipLoop
-END IF
 
-loopx = loopx + 1
-LOOP
+'loopx = loopx + 1
+'LOOP
 
 '====================================================================
 
@@ -199,10 +207,10 @@ SELECT CASE opcion
         GOTO Mercado1INI
         CASE 2
         Save
-        END
+        GOTO FinSubMercado1
 END SELECT
 
-
+FinSubMercado1:
 END SUB
 
 SUB Save '========================== SAVES DATA ==========================
