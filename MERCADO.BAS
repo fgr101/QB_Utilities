@@ -25,10 +25,13 @@ DECLARE SUB Mercado1 ()
 'Win32 usando WINE.
 
 DIM SHARED ProdutoA(1000) AS STRING
+DIM SHARED ProdutoB(1000) AS STRING
 DIM SHARED nome AS STRING
 DIM SHARED NomeMercado1 AS STRING
+DIM SHARED NomeMercado2 AS STRING
 
-DIM SHARED PrecoProdutoA(1000) AS INTEGER
+DIM SHARED PrecoProdutoA(1000) AS single
+DIM SHARED PrecoProdutoB(1000) AS single
 DIM SHARED NumeroDeProduto AS INTEGER
 DIM SHARED opcion AS INTEGER
 DIM SHARED loopx AS INTEGER
@@ -42,15 +45,22 @@ CLS
 
 PRINT "1- Lista de Produtos Mercado1"
 PRINT "2- Acrescentar Produto Mercado1"
+PRINT "3- Acrescentar Produto Mercado2"
+print "4- Sair"
 
 INPUT opcion
-
 
 SELECT CASE opcion
         CASE 1
         ListaMercado1
         CASE 2
         Mercado1
+        case 3
+        call Mercado2
+        CASE 4
+        END
+		CASE ELSE
+		GOTO MenuPrincipal
 END SELECT
 
 GOTO  MenuPrincipal
@@ -80,6 +90,7 @@ GOTO  MenuPrincipal
 SUB ListaMercado1
 
 loopx = 0
+print
 
 DO UNTIL loopx = 1000
 
@@ -110,7 +121,7 @@ CLOSE #1
 OPEN "data.dat" FOR OUTPUT AS #1
 
 loopx = 0
-DO UNTIL loopx = 1001
+DO UNTIL loopx = 3003
 WRITE #1, ""
 loopx = loopx + 1
 LOOP
@@ -129,7 +140,8 @@ loopx = 0
 DO UNTIL loopx = 100
 INPUT #1, ProdutoA(loopx)
 INPUT #1, PrecoProdutoA(loopx)
-INPUT #1, ProdutoA(loopx)
+INPUT #1, ProdutoB(loopx)
+INPUT #1, PrecoProdutoB(loopx)
 loopx = loopx + 1
 LOOP
 
@@ -219,9 +231,12 @@ OPEN "data.dat" FOR OUTPUT AS #1
 
 loopx = 0
 DO UNTIL loopx = 1000
+
 WRITE #1, ProdutoA(loopx)
 WRITE #1, PrecoProdutoA(loopx)
-WRITE #1, ProdutoA(loopx)
+WRITE #1, ProdutoB(loopx)
+WRITE #1, PrecoProdutoB(loopx)
+
 loopx = loopx + 1
 LOOP
 
@@ -237,4 +252,82 @@ DO WHILE INKEY$ = ""
 LOOP
 
 END SUB
+
+sub Mercado2
+Mercado2INI:
+NomeMercado2 = "Carrefour"
+
+PRINT
+INPUT "Nome do Produto:"; nome
+nome = UCASE$(nome)               'UCASE$ pasa cualquier STRING
+                                  'a mayusculas. LCASE$ hace lo
+                                  'contrario.
+
+'====================================================================
+                                        
+loopx = 0                         
+DO UNTIL loopx = 1000             
+                                 
+								 '1- SI ENCUENTRA UN LUGAR VACIO EN LA LISTA
+IF ProdutoB(loopx) = "" THEN	 'SIGNIFICA QUE NO HAY MÁS PRODUCTOS. TERMINA
+        NumeroDeProduto = loopx  'LA BUSQUEDA Y COLOCA EN ESE ESPACIO EL PRODUCTO.
+        ProdutoB(loopx) = nome  
+        PRINT "Produto Novo. ID "; NumeroDeProduto; "."
+        GOTO SkipLoop
+END IF
+								 '2- CHEQUEA SI EL NOMBRE DEL PRODUCTO
+								 'SE ENCUENTRA ENTRE LOS ITEMS DEL	
+IF nome = ProdutoB(loopx) THEN	 'MERCADO.
+        NumeroDeProduto = loopx
+        ProdutoB(NumeroDeProduto) = nome
+        PRINT "Produto achado na lista. ID "; NumeroDeProduto; "."
+        GOTO SkipLoop
+END IF
+
+loopx = loopx + 1
+LOOP
+
+'====================================================================
+
+'loopx = 0                     '2- SI EL NOMBRE DEL PRODUCTO NO FUE ENCONTRADO
+'DO UNTIL loopx = 1000         'BUSCA UN LUGAR VACIO EN LA LISTA DE PRODUCTOS
+                              'PARA PODER COLOCAR EL NUEVO ITEM.
+
+
+'loopx = loopx + 1
+'LOOP
+
+'====================================================================
+
+SkipLoop:
+x = NumeroDeProduto
+
+PRINT
+PerguntarNovamente:
+INPUT "Valor do Produto:"; PrecoProdutoB(x)
+
+IF PrecoProdutoB(x) = 0 THEN
+        GOTO PerguntarNovamente
+END IF
+
+PRINT
+PRINT "Produto: "; ProdutoB(x); " | ID do Produto:"; NumeroDeProduto
+PRINT "Valor: $"; PrecoProdutoB(x)
+
+PRINT
+PRINT "[1] Acrescentar outro produto [2] Sair"
+INPUT opcion
+
+SELECT CASE opcion
+        CASE 1
+        GOTO Mercado2INI
+        CASE 2
+        Save
+        GOTO FinSubMercado2
+END SELECT
+
+FinSubMercado2:
+
+
+end sub
 
