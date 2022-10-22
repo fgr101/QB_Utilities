@@ -44,20 +44,25 @@ opcion = 0
 CLS
 
 PRINT "1- Lista de Produtos Mercado1"
-PRINT "2- Acrescentar Produto Mercado1"
-PRINT "3- Acrescentar Produto Mercado2"
-print "4- Sair"
+PRINT "2- Lista de Produtos Mercado2"
+print
+PRINT "3- Acrescentar Produto Mercado1"
+PRINT "4- Acrescentar Produto Mercado2"
+print
+print "5- Sair"
 
 INPUT opcion
 
 SELECT CASE opcion
         CASE 1
-        ListaMercado1
-        CASE 2
+        call ListaMercado1
+        case 2
+        call ListaMercado2
+        CASE 3
         Mercado1
-        case 3
+        case 4
         call Mercado2
-        CASE 4
+        CASE 5
         END
 		CASE ELSE
 		GOTO MenuPrincipal
@@ -94,12 +99,8 @@ print
 
 DO UNTIL loopx = 1000
 
-IF NOT ProdutoA(loopx) = "" THEN
-PRINT ProdutoA(loopx)
-END IF
-
-IF NOT PrecoProdutoA(loopx) = 0 THEN
-PRINT PrecoProdutoA(loopx)
+IF NOT ProdutoA(loopx) = "" and NOT PrecoProdutoA(loopx) = 0 THEN
+PRINT ProdutoA(loopx); " | $"; PrecoProdutoA(loopx); " | ID -"; loopx
 END IF
 
 loopx = loopx + 1
@@ -175,7 +176,7 @@ END IF
 								 'SE ENCUENTRA ENTRE LOS ITEMS DEL	
 IF nome = ProdutoA(loopx) THEN	 'MERCADO.
         NumeroDeProduto = loopx
-        ProdutoA(NumeroDeProduto) = nome
+        'ProdutoA(NumeroDeProduto) = nome
         PRINT "Produto achado na lista. ID "; NumeroDeProduto; "."
         GOTO SkipLoop
 END IF
@@ -197,6 +198,7 @@ LOOP
 
 SkipLoop:
 x = NumeroDeProduto
+call IgualarItemsID
 
 PRINT
 PerguntarNovamente:
@@ -279,7 +281,7 @@ END IF
 								 'SE ENCUENTRA ENTRE LOS ITEMS DEL	
 IF nome = ProdutoB(loopx) THEN	 'MERCADO.
         NumeroDeProduto = loopx
-        ProdutoB(NumeroDeProduto) = nome
+        'ProdutoB(NumeroDeProduto) = nome
         PRINT "Produto achado na lista. ID "; NumeroDeProduto; "."
         GOTO SkipLoop
 END IF
@@ -301,6 +303,7 @@ LOOP
 
 SkipLoop:
 x = NumeroDeProduto
+call IgualarItemsID
 
 PRINT
 PerguntarNovamente:
@@ -331,3 +334,28 @@ FinSubMercado2:
 
 end sub
 
+sub ListaMercado2
+
+loopx = 0
+print
+
+DO UNTIL loopx = 1000
+
+IF NOT ProdutoB(loopx) = "" and NOT PrecoProdutoB(loopx) = 0 THEN
+PRINT ProdutoB(loopx); " | $"; PrecoProdutoB(loopx); " | ID -"; loopx
+END IF
+
+loopx = loopx + 1
+LOOP
+
+WaitKey
+
+end sub
+
+sub IgualarItemsID
+
+ProdutoA(x) = nome
+ProdutoB(x) = nome
+
+
+end sub
