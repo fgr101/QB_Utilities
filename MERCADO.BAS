@@ -32,7 +32,7 @@ DIM SHARED NomeMercado2 AS STRING
 
 DIM SHARED PrecoProdutoA(1000) AS single
 DIM SHARED PrecoProdutoB(1000) AS single
-DIM SHARED NumeroDeProduto AS INTEGER
+DIM SHARED NumeroDeProduto(1000) AS INTEGER
 DIM SHARED opcion AS INTEGER
 DIM SHARED loopx AS INTEGER
 DIM SHARED x AS INTEGER
@@ -43,13 +43,15 @@ MenuPrincipal:
 opcion = 0
 CLS
 
+color 10
 PRINT "1- Lista de Produtos Mercado1"
 PRINT "2- Lista de Produtos Mercado2"
 print
 PRINT "3- Acrescentar Produto Mercado1"
 PRINT "4- Acrescentar Produto Mercado2"
 print
-print "5- Sair"
+print "5- Comparar só um produto"
+print "6- Sair"
 
 INPUT opcion
 
@@ -62,7 +64,10 @@ SELECT CASE opcion
         Mercado1
         case 4
         call Mercado2
-        CASE 5
+        case 5
+        call CompararSoUm
+        CASE 6
+        call Save
         END
 		CASE ELSE
 		GOTO MenuPrincipal
@@ -100,7 +105,7 @@ print
 DO UNTIL loopx = 1000
 
 IF NOT ProdutoA(loopx) = "" and NOT PrecoProdutoA(loopx) = 0 THEN
-PRINT ProdutoA(loopx); " | $"; PrecoProdutoA(loopx); " | ID -"; loopx
+PRINT ProdutoA(loopx); " | $"; PrecoProdutoA(loopx); " | ID -"; NumeroDeProduto(loopx)
 END IF
 
 loopx = loopx + 1
@@ -136,14 +141,20 @@ CLOSE #1
 
 OPEN "data.dat" FOR INPUT AS #1
 
+INPUT #1, NomeMercado1
+input #1, NomeMercado2
+
 loopx = 0
 
 DO UNTIL loopx = 100
-INPUT #1, ProdutoA(loopx)
-INPUT #1, PrecoProdutoA(loopx)
-INPUT #1, ProdutoB(loopx)
-INPUT #1, PrecoProdutoB(loopx)
-loopx = loopx + 1
+
+	INPUT #1, ProdutoA(loopx)
+	INPUT #1, PrecoProdutoA(loopx)
+	INPUT #1, ProdutoB(loopx)
+	INPUT #1, PrecoProdutoB(loopx)
+	input #1, NumeroDeProduto(loopx)
+	loopx = loopx + 1
+
 LOOP
 
 CLOSE #1
@@ -152,7 +163,12 @@ END SUB
 SUB Mercado1
 
 Mercado1INI:
-NomeMercado1 = "Valor"
+
+if NomeMercado1 = "" then
+	
+	input "Qual é o nome do mercado"; NomeMercado1
+
+end if
 
 PRINT
 INPUT "Nome do Produto:"; nome
@@ -167,17 +183,17 @@ DO UNTIL loopx = 1000
                                  
 								 '1- SI ENCUENTRA UN LUGAR VACIO EN LA LISTA
 IF ProdutoA(loopx) = "" THEN	 'SIGNIFICA QUE NO HAY MÁS PRODUCTOS. TERMINA
-        NumeroDeProduto = loopx  'LA BUSQUEDA Y COLOCA EN ESE ESPACIO EL PRODUCTO.
+        NumeroDeProduto(loopx) = loopx  'LA BUSQUEDA Y COLOCA EN ESE ESPACIO EL PRODUCTO.
         ProdutoA(loopx) = nome  
-        PRINT "Produto Novo. ID "; NumeroDeProduto; "."
+        PRINT "Produto Novo. ID "; NumeroDeProduto(loopx); "."
         GOTO SkipLoop
 END IF
 								 '2- CHEQUEA SI EL NOMBRE DEL PRODUCTO
 								 'SE ENCUENTRA ENTRE LOS ITEMS DEL	
 IF nome = ProdutoA(loopx) THEN	 'MERCADO.
-        NumeroDeProduto = loopx
+        NumeroDeProduto(loopx) = loopx
         'ProdutoA(NumeroDeProduto) = nome
-        PRINT "Produto achado na lista. ID "; NumeroDeProduto; "."
+        PRINT "Produto achado na lista. ID "; NumeroDeProduto(loopx); "."
         GOTO SkipLoop
 END IF
 
@@ -197,7 +213,7 @@ LOOP
 '====================================================================
 
 SkipLoop:
-x = NumeroDeProduto
+x = NumeroDeProduto(loopx)
 call IgualarItemsID
 
 PRINT
@@ -209,7 +225,7 @@ IF PrecoProdutoA(x) = 0 THEN
 END IF
 
 PRINT
-PRINT "Produto: "; ProdutoA(x); " | ID do Produto:"; NumeroDeProduto
+PRINT "Produto: "; ProdutoA(x); " | ID do Produto:"; NumeroDeProduto(x)
 PRINT "Valor: $"; PrecoProdutoA(x)
 
 PRINT
@@ -231,15 +247,19 @@ SUB Save '========================== SAVES DATA ==========================
 
 OPEN "data.dat" FOR OUTPUT AS #1
 
+WRITE #1, NomeMercado1
+WRITE #1, NomeMercado2
+
 loopx = 0
 DO UNTIL loopx = 1000
 
-WRITE #1, ProdutoA(loopx)
-WRITE #1, PrecoProdutoA(loopx)
-WRITE #1, ProdutoB(loopx)
-WRITE #1, PrecoProdutoB(loopx)
+	WRITE #1, ProdutoA(loopx)
+	WRITE #1, PrecoProdutoA(loopx)
+	WRITE #1, ProdutoB(loopx)
+	WRITE #1, PrecoProdutoB(loopx)
+	WRITE #1, NumeroDeProduto(loopx)
+	loopx = loopx + 1
 
-loopx = loopx + 1
 LOOP
 
 LOCATE , 25
@@ -257,7 +277,12 @@ END SUB
 
 sub Mercado2
 Mercado2INI:
-NomeMercado2 = "Carrefour"
+
+if NomeMercado2 = "" then
+	
+	input "Qual é o nome do mercado"; NomeMercado2
+
+end if
 
 PRINT
 INPUT "Nome do Produto:"; nome
@@ -272,17 +297,17 @@ DO UNTIL loopx = 1000
                                  
 								 '1- SI ENCUENTRA UN LUGAR VACIO EN LA LISTA
 IF ProdutoB(loopx) = "" THEN	 'SIGNIFICA QUE NO HAY MÁS PRODUCTOS. TERMINA
-        NumeroDeProduto = loopx  'LA BUSQUEDA Y COLOCA EN ESE ESPACIO EL PRODUCTO.
+        NumeroDeProduto(loopx) = loopx  'LA BUSQUEDA Y COLOCA EN ESE ESPACIO EL PRODUCTO.
         ProdutoB(loopx) = nome  
-        PRINT "Produto Novo. ID "; NumeroDeProduto; "."
+        PRINT "Produto Novo. ID "; NumeroDeProduto(loopx); "."
         GOTO SkipLoop
 END IF
 								 '2- CHEQUEA SI EL NOMBRE DEL PRODUCTO
 								 'SE ENCUENTRA ENTRE LOS ITEMS DEL	
 IF nome = ProdutoB(loopx) THEN	 'MERCADO.
-        NumeroDeProduto = loopx
+        NumeroDeProduto(loopx) = loopx
         'ProdutoB(NumeroDeProduto) = nome
-        PRINT "Produto achado na lista. ID "; NumeroDeProduto; "."
+        PRINT "Produto achado na lista. ID "; NumeroDeProduto(loopx); "."
         GOTO SkipLoop
 END IF
 
@@ -302,7 +327,7 @@ LOOP
 '====================================================================
 
 SkipLoop:
-x = NumeroDeProduto
+x = NumeroDeProduto(loopx)
 call IgualarItemsID
 
 PRINT
@@ -314,7 +339,7 @@ IF PrecoProdutoB(x) = 0 THEN
 END IF
 
 PRINT
-PRINT "Produto: "; ProdutoB(x); " | ID do Produto:"; NumeroDeProduto
+PRINT "Produto: "; ProdutoB(x); " | ID do Produto:"; NumeroDeProduto(x)
 PRINT "Valor: $"; PrecoProdutoB(x)
 
 PRINT
@@ -342,7 +367,7 @@ print
 DO UNTIL loopx = 1000
 
 IF NOT ProdutoB(loopx) = "" and NOT PrecoProdutoB(loopx) = 0 THEN
-PRINT ProdutoB(loopx); " | $"; PrecoProdutoB(loopx); " | ID -"; loopx
+PRINT ProdutoB(loopx); " | $"; PrecoProdutoB(loopx); " | ID -"; NumeroDeProduto(loopx)
 END IF
 
 loopx = loopx + 1
@@ -356,6 +381,64 @@ sub IgualarItemsID
 
 ProdutoA(x) = nome
 ProdutoB(x) = nome
+NumeroDeProduto(x) = x 
 
+
+
+end sub
+
+sub CompararSoUm
+
+print
+input "Ingrese o nome do produto: ", nome
+nome = ucase$(nome)
+
+loopx = 0
+
+do until loopx = 1000
+	
+	if ProdutoA(loopx) = "" then
+	
+		print "Produto nao listado." 
+		goto EndCompararSoUm
+		
+	end if
+	
+	if nome = ProdutoA(loopx) then
+		
+		NumeroDeProduto(loopx) = loopx
+		goto SkipLoop1
+	
+	end if
+		
+	loopx = loopx + 1
+
+loop
+
+SkipLoop1:
+x = NumeroDeProduto(loopx)
+
+print
+PRINT "Produto: "; ProdutoA(x); " | ID do Produto:"; NumeroDeProduto(x);" | $"; PrecoProdutoA(x); " | Mercado: "; NomeMercado1
+PRINT "Produto: "; ProdutoB(x); " | ID do Produto:"; NumeroDeProduto(x);" | $"; PrecoProdutoB(x); " | Mercado: "; NomeMercado2
+
+if PrecoProdutoA(x) < PrecoProdutoB(x) then
+	
+	print 
+	print "O preco mais baixo está no mercado "; NomeMercado1; "."
+
+end if
+
+if PrecoProdutoB(x) < PrecoProdutoA(x) then
+	
+	print 
+	print "O preco mais baixo está no mercado "; NomeMercado2; "."
+
+end if
+
+WaitKey
+
+EndCompararSoUm:
+WaitKey
 
 end sub
