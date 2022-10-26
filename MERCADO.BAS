@@ -44,11 +44,34 @@ opcion = 0
 CLS
 
 color 10
+
+if NomeMercado1	= "" then
 PRINT "1- Lista de Produtos Mercado1"
+else 
+PRINT "1- Lista de Produtos "; NomeMercado1
+end if
+
+if NomeMercado2 = "" then
 PRINT "2- Lista de Produtos Mercado2"
+else
+PRINT "2- Lista de Produtos "; NomeMercado2
+end if
+
+
 print
-PRINT "3- Acrescentar Produto Mercado1"
-PRINT "4- Acrescentar Produto Mercado2"
+
+if NomeMercado1	= "" then
+PRINT "3- Acrescentar Produtos do Mercado1"
+else 
+PRINT "3- Acrescentar Produtos do "; NomeMercado1
+end if
+
+if NomeMercado2 = "" then
+PRINT "4- Acrescentar Produtos do Mercado2"
+else
+PRINT "4- Acrescentar Produtos do "; NomeMercado2
+end if
+
 print
 print "5- Comparar só um produto"
 print "6- Sair"
@@ -435,6 +458,14 @@ if PrecoProdutoB(x) < PrecoProdutoA(x) then
 	print "O preco mais baixo está no mercado "; NomeMercado2; "."
 
 end if
+
+if PrecoProdutoA(x) = PrecoProdutoB(x) then
+	
+	print 
+	print "O valor do produto é o mesmo em todos os mercados."
+
+end if
+
 
 WaitKey
 
