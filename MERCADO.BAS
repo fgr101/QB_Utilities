@@ -29,10 +29,14 @@ DIM SHARED ProdutoB(1000) AS STRING
 DIM SHARED nome AS STRING
 DIM SHARED NomeMercado1 AS STRING
 DIM SHARED NomeMercado2 AS STRING
+DIM SHARED NomeProcurado(10) AS STRING
 
 DIM SHARED PrecoProdutoA(1000) AS single
 DIM SHARED PrecoProdutoB(1000) AS single
 DIM SHARED NumeroDeProduto(1000) AS INTEGER
+DIM SHARED IDProcurado(10) AS INTEGER
+DIM SHARED ID AS INTEGER
+DIM SHARED ComprarEm(3) AS INTEGER
 DIM SHARED opcion AS INTEGER
 DIM SHARED loopx AS INTEGER
 DIM SHARED x AS INTEGER
@@ -74,7 +78,8 @@ end if
 
 print
 print "5- Comparar só um produto"
-print "6- Sair"
+print "6- Criar Listas de Compras"
+print "7- Sair"
 
 INPUT opcion
 
@@ -89,7 +94,9 @@ SELECT CASE opcion
         call Mercado2
         case 5
         call CompararSoUm
-        CASE 6
+        case 6
+        call CriarListas
+        CASE 7
         call Save
         END
 		CASE ELSE
@@ -471,5 +478,210 @@ WaitKey
 
 EndCompararSoUm:
 WaitKey
+
+end sub
+
+sub CriarListas
+
+print				'Primero el programa pide el ingreso del nombre de
+					'los productos correspondientes. Los guarda a todos 
+loopx = 0			'en diversas variables llamadas NomeProcurado(x).
+
+do until loopx = 10	
+
+	input "Nome do Produto: ", NomeProcurado(loopx)
+	NomeProcurado(loopx) = UCASE$(NomeProcurado(loopx))
+	
+	if NomeProcurado(loopx) = "" then
+
+		goto SkipLoop2
+	
+	end if
+		
+		
+loopx = loopx + 1
+loop
+
+SkipLoop2:		'Luego el programa compara todas esas variables ingresadas
+				'con la base de datos de items anteriormente cargados.
+loopA = 0		'Si esos items se encuentran, anota el ID de cada producto
+loopx = 0		'a ser comparado.
+
+print
+
+do until loopA = 10
+
+	if NomeProcurado(loopA) = "" then
+	
+		goto SkipLoop3
+	
+	end if
+	
+	
+	do until loopx = 1000
+		
+		if ProdutoA(loopx) = "" then
+		
+			print "Produto "; NomeProcurado(loopA); " nao listado."
+			loopx = 0 
+			goto SkipLoop3
+			
+		end if
+		
+		if NomeProcurado(loopA) = ProdutoA(loopx) then
+			
+			IDProcurado(loopA) = loopx
+			print "Nome do Produto: "; ProdutoA(loopx); " | ID: "; IDProcurado(loopA) 
+			goto SkipLoop3
+					
+		end if
+			
+		loopx = loopx + 1
+
+	loop
+
+	SkipLoop3:
+
+	loopA = loopA + 1
+
+loop
+
+WaitKey
+print
+
+loopA = 0
+
+do until loopA = 10
+
+	ID = IDProcurado(loopA) 
+	
+	if PrecoProdutoA(ID) < PrecoProdutoB(ID) then
+		
+		ComprarEm(loopA) = 1
+		print "Comprar em mercado"; ComprarEm(loopA)
+	
+	end if
+	
+	if PrecoProdutoA(ID) > PrecoProdutoB(ID) then
+		
+		ComprarEm(loopA) = 2
+		print "Comprar em mercado"; ComprarEm(loopA)
+		
+	end if
+	
+	if PrecoProdutoA(ID) = PrecoProdutoB(ID) then
+		
+		randomize timer
+		d6 = int (rnd * 2) + 1
+				
+		ComprarEm(loopA) = d6
+		print "Comprar em qualquer mercado. Valor"; ComprarEm(loopA)
+		
+	end if	
+	
+	if PrecoProdutoA(ID) = 0 or PrecoProdutoB(ID) = 0 then
+		
+		randomize timer
+		d6 = int (rnd * 2) + 1
+		
+		ComprarEm(loopA) = d6
+		print "Comprar em qualquer mercado. Valor"; ComprarEm(loopA)
+		
+	end if	
+	
+	loopA = loopA + 1
+
+loop
+
+WaitKey
+
+'=======================================================================
+
+loopA = 0
+print
+
+do until loopA = 10
+print NomeProcurado(loopA); "| Comprar em "; ComprarEm(loopA)
+loopA = loopA + 1
+loop
+
+WaitKey
+
+loopA = 0 
+
+print
+color 1
+print NomeMercado1
+print "==========================="
+print
+
+do until loopA = 10
+		
+	if ComprarEm(loopA) = 1 then
+	
+		print NomeProcurado(loopA) 
+	
+	end if 
+	
+	loopA = loopA + 1	
+
+loop
+
+loopA = 0 
+
+print
+color 3
+print NomeMercado2
+print "==========================="
+print
+
+do until loopA = 10
+
+	if ComprarEm(loopA) = 2 then
+	
+		color 3
+		print NomeProcurado(loopA) 
+	
+	end if 
+	
+	loopA = loopA + 1	
+
+loop
+
+'print
+'loopA = 0 
+
+'do until loopA = 10
+	
+	'if ComprarEm(loopA) = 0 then
+		
+		'if NomeProcurado(loopA) = "" then
+		'goto SkipLoop4
+		'end if
+	
+		'color 4
+		'print NomeProcurado(loopA) 
+	
+	'end if 
+	
+	'loopA = loopA + 1	
+
+	'SkipLoop4:
+
+'loop
+
+WaitKey
+
+loopA = 0   'BORRANDO VARIABLES DE ARRAYS
+
+do until loopA = 10
+
+	NomeProcurado(loopA) = ""
+	ComprarEm(loopA) = 0
+
+	loopA = loopA + 1
+
+loop
+
 
 end sub
