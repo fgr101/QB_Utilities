@@ -9,4 +9,4 @@ BOOKS: The utility of this program is to help you keep a record of all the books
 - Add and improve the MAIN MENU.
 - Add RATINGS from 1 to 5 for books.
 
-Mercado: It is a simple application that helps you tracking the price of items and products in two different grocery stores. It can help you later to make the "grocery store list", showing you where you can find the products for the cheapest price.
+* MERCADO: It is a simple application that helps you tracking the price of items and products in two different grocery stores. It can help you later to make the "grocery store list", showing you where you can find the products for the cheapest price.
