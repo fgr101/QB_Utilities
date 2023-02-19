@@ -12,3 +12,7 @@ BOOKS: The utility of this program is to help you keep a record of all the books
 --------------------
 
 MERCADO: It is a simple application that helps you tracking the price of items and products in two different grocery stores. It can help you later to make the "grocery store list", showing you where you can find the products for the cheapest price.
+
+--------------------
+
+SAVINGS: Simple application that helps you track your savings. Aimed to work with different currencies as AR$ and U$D. I'll be adding Brazillian Reais (R$) soon. It also shows a very simple chart and makes some basic currency conversions from Argentinean Pesos to Dollar.
