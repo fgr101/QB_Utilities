@@ -403,6 +403,9 @@ PRINT "1 U$D = AR$"; DollarARS
 LOCATE 4, 50
 PRINT "AR$"; PatrimonioTotal(0); "[U$"; ARSChangeUSD; "]"
 
+LOCATE 6, 45
+PRINT "TOTAL in US Dollars = U$D"; ARSChangeUSD + PatrimonioTotal(1)
+
 COLOR 7, 0
 LOCATE 8, 1
 PRINT "AR$"; PatrimonioTotal(0)
