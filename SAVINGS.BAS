@@ -24,21 +24,22 @@ programasavings:
 'dollars and for the totalsav amount. They'll follow that order 0, 1, 2.
 
 
-DIM SHARED PatrimonioTotal(0 TO 2) AS CURRENCY
+DIM SHARED PatrimonioTotal(0 TO 3) AS CURRENCY
 DIM SHARED dinero AS CURRENCY
 DIM SHARED totalsav AS CURRENCY
 
 DIM SHARED prestamo AS CURRENCY
 DIM SHARED interes AS CURRENCY
 DIM SHARED DollarARS AS CURRENCY
+DIM SHARED DollarREAIS AS CURRENCY
 DIM SHARED ARSChangeUSD AS CURRENCY
+DIM SHARED REAISChangeUSD AS CURRENCY
+DIM SHARED TotalDollars AS CURRENCY
 
 
 DIM SHARED devolver AS CURRENCY
 DIM SHARED xloop AS INTEGER
 DIM SHARED valor AS INTEGER
-
-
 
 OPCION = 0
 tazadeinteres = 10
@@ -65,6 +66,27 @@ WRITE #1, ""
 WRITE #1, ""
 WRITE #1, ""
 WRITE #1, ""
+WRITE #1, ""
+WRITE #1, ""
+WRITE #1, ""
+WRITE #1, ""
+WRITE #1, ""
+WRITE #1, ""
+WRITE #1, ""
+WRITE #1, ""
+WRITE #1, ""
+WRITE #1, ""
+WRITE #1, ""
+WRITE #1, ""
+WRITE #1, ""
+WRITE #1, ""
+WRITE #1, ""
+WRITE #1, ""
+WRITE #1, ""
+WRITE #1, ""
+WRITE #1, ""
+
+
 PRINT "savings.bin File created."
 END IF
 CLOSE #1
@@ -79,6 +101,15 @@ CALL ShowChart        '============================================ CHARTS
 CALL WaitKey
 
 
+IF DollarARS = 0 THEN  '========== NO SE PUEDE DIVIDIR POR CERO! ============
+DollarARS = 1
+PRINT "Not possible to divide a number by ZERO."
+END IF
+
+IF DollarREAIS = 0 THEN
+DollarREAIS = 1
+PRINT "Not possible to divide a number by ZERO."
+END IF
 
 'This is the beginning of the program.
 
@@ -86,32 +117,35 @@ ahorroini:
 CLS
 
      COLOR 7
-     LOCATE 1, 50
-     PRINT "Depositos: $"; PatrimonioTotal(0); "// U$"; PatrimonioTotal(1)
-     LOCATE 2, 50
+     LOCATE 1, 46
+     PRINT "Deposits: $"; PatrimonioTotal(0); "| U$"; PatrimonioTotal(1); "| R$"; PatrimonioTotal(3)
+     LOCATE 2, 46
      PRINT "A reponer: $"; devolver; "(+"; tazadeinteres; "%)"
 
 
      COLOR 15, 5
      LOCATE 1, 1
-     PRINT "           Savings Control V0.3             "
+     PRINT "           Savings Control V0.3            "
      PRINT
      
      COLOR 0, 7
 
-     PRINT "                                            "
-     PRINT " 1- Deposit money in local currency  ($)    "
-     PRINT " 2- Withdraw money in local currency ($)    "
-     PRINT " 3- Deposit money in US dollar     (U$D)    "
-     PRINT " 4- Withdraw money in US dollar    (U$D)    "
-     PRINT " 5- Savings Report                          "
-     PRINT " 6- Change % interest rates                 "
-     PRINT " 60- Dolar --> AR$ - Change Rate            "
-     PRINT " 7- Reset Data                              "
-     PRINT " 8- Show Charts                             "
-     PRINT "                                            "
-     PRINT " 9- Exit                                    "
-     PRINT "                                            "
+     PRINT "                                           "
+     PRINT " 1- Deposit money in local currency  ($)   "
+     PRINT " 2- Withdraw money in local currency ($)   "
+     PRINT " 3- Deposit money in US dollar     (U$D)   "
+     PRINT " 4- Withdraw money in US dollar    (U$D)   "
+     PRINT " 5- Savings Report                         "
+     PRINT " 6- Change % interest rates                "
+     PRINT " 60- Dollar --> AR$ - Change Rate          "
+     PRINT " 63- Dollar -->  R$ - Change Rate          "
+     PRINT " 61- Deposit money in BR Reais (R$)        "
+     PRINT " 62- Withdraw money in BR Reais (R$)       "
+     PRINT " 7- Reset Data                             "
+     PRINT " 8- Show Charts                            "
+     PRINT "                                           "
+     PRINT " 9- Exit                                   "
+     PRINT "                                           "
 
      PRINT
      COLOR 3, 0
@@ -305,6 +339,55 @@ SELECT CASE OPCION    '//Las diferentes opciones. The different options.
         MicroPause
         GOTO ahorroini
         
+        CASE 63
+
+        INPUT "How much is U$1 in BR Reals?"; DollarREAIS
+        MicroPause
+        GOTO ahorroini
+
+
+        CASE 61 'OPCION 61 - AGREGAR DEPOSITO EN REALES
+
+                PRINT
+                PRINT "How many Reals to add?"
+                INPUT dinero
+                PatrimonioTotal(3) = PatrimonioTotal(3) + dinero
+                PRINT
+                PRINT "Usted posee un total de (R$)"
+                PRINT PatrimonioTotal(3);
+
+                CALL WaitKey
+
+                GOTO ahorroini
+
+
+        CASE 62 'OPCION 62 - RETIRAR DEPOSITO EN REALES
+
+                PRINT
+                PRINT "Cuanto dinero en reales desea retirar?"
+                INPUT dinero
+                totalsav = PatrimonioTotal(3)
+                totalsav = totalsav - dinero
+
+                IF totalsav < 0 THEN
+                PRINT "Usted no tiene ese dinero."
+
+                CALL WaitKey
+
+                GOTO ahorroini
+                END IF
+
+                IF totalsav >= 0 THEN
+                PRINT "Dinero retirado en R$. Usted posee un total de: "
+                PatrimonioTotal(3) = totalsav
+                PRINT PatrimonioTotal(3);
+
+                CALL WaitKey
+
+                GOTO ahorroini       'vuelve al ahorroini / goes back to the beginning of the program.
+                END IF
+
+
         CASE ELSE
 
                 PRINT "Ingrese una opcion correcta."
@@ -332,11 +415,13 @@ INPUT #1, dinero
 INPUT #1, PatrimonioTotal(0)
 INPUT #1, PatrimonioTotal(1)
 INPUT #1, PatrimonioTotal(2)
+INPUT #1, PatrimonioTotal(3)
 INPUT #1, prestamo
 INPUT #1, interes
 INPUT #1, devolver
 INPUT #1, tazadeinteres
 INPUT #1, DollarARS
+INPUT #1, DollarREAIS
 
 CLOSE #1
 
@@ -360,6 +445,14 @@ LOOP
 
 END SUB
 
+SUB NOTES
+
+' * ADD ANIMATED CHART FOR SAVINGS IN REAL CURRENCY (BR CURRENCY)
+' * ORGANIZE THE MAIN MENU BETTER
+
+
+END SUB
+
 ' ================= SAVE ==========================
 ' Save PROGRAM variables into the savings.bin file.
 '
@@ -368,14 +461,16 @@ SUB save
 OPEN "savings.bin" FOR OUTPUT AS #1
 WRITE #1, totalsav
 WRITE #1, dinero
-WRITE #1, PatrimonioTotal(0)
-WRITE #1, PatrimonioTotal(1)
+WRITE #1, PatrimonioTotal(0) 'LOCAL CURRENCY
+WRITE #1, PatrimonioTotal(1) 'DOLLARS
 WRITE #1, PatrimonioTotal(2)
+WRITE #1, PatrimonioTotal(3) 'REALS
 WRITE #1, prestamo
 WRITE #1, interes
 WRITE #1, devolver
 WRITE #1, tazadeinteres
 WRITE #1, DollarARS
+WRITE #1, DollarREAIS
 CLOSE #1
 
 PRINT "Saving..."
@@ -388,6 +483,8 @@ SUB ShowChart
 '================= PRINTING CHART TEXT & INFORMATION ========================
 
 ARSChangeUSD = PatrimonioTotal(0) / DollarARS
+REAISChangeUSD = PatrimonioTotal(3) / DollarREAIS
+
 
 COLOR 2, 0
 CLS
@@ -396,15 +493,23 @@ PRINT "U$D"; PatrimonioTotal(1)
 
 COLOR 15
 
-LOCATE 2, 50
-PRINT "1 U$D = AR$"; DollarARS
+LOCATE 2, 48
+PRINT "1 U$D = AR$"; DollarARS; "| R$"; DollarREAIS
 
+LOCATE 4, 48
+PRINT "U$"; PatrimonioTotal(1); "[U$"; PatrimonioTotal(1); "]"
 
-LOCATE 4, 50
+LOCATE 6, 48
 PRINT "AR$"; PatrimonioTotal(0); "[U$"; ARSChangeUSD; "]"
 
-LOCATE 6, 45
-PRINT "TOTAL in US Dollars = U$D"; ARSChangeUSD + PatrimonioTotal(1)
+LOCATE 8, 48
+PRINT "R$"; PatrimonioTotal(3); "[U$"; REAISChangeUSD; "]"
+
+TotalDollars = PatrimonioTotal(1) + ARSChangeUSD + REAISChangeUSD
+
+LOCATE 10, 46
+
+PRINT "TOTAL in US Dollars = U$D"; TotalDollars
 
 COLOR 7, 0
 LOCATE 8, 1
