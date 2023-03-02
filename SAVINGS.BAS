@@ -1,3 +1,5 @@
+DECLARE SUB Help ()
+DECLARE SUB SubMenu ()
 DECLARE SUB WaitKey ()
 DECLARE SUB MicroPause ()
 DECLARE SUB ShowChart ()
@@ -125,7 +127,7 @@ CLS
 
      COLOR 15, 5
      LOCATE 1, 1
-     PRINT "           Savings Control V0.3            "
+     PRINT "           Savings Control V0.4            "
      PRINT
      
      COLOR 0, 7
@@ -135,14 +137,16 @@ CLS
      PRINT " 2- Withdraw money in local currency ($)   "
      PRINT " 3- Deposit money in US dollar     (U$D)   "
      PRINT " 4- Withdraw money in US dollar    (U$D)   "
-     PRINT " 5- Savings Report                         "
-     PRINT " 6- Change % interest rates                "
-     PRINT " 60- Dollar --> AR$ - Change Rate          "
-     PRINT " 63- Dollar -->  R$ - Change Rate          "
      PRINT " 61- Deposit money in BR Reais (R$)        "
      PRINT " 62- Withdraw money in BR Reais (R$)       "
-     PRINT " 7- Reset Data                             "
+     PRINT " 10- Currencies Change Rates [ARS|BRL]     "
+     PRINT " 6- Change % interest rates                "
      PRINT " 8- Show Charts                            "
+     PRINT " 5- Savings Report                         "
+     PRINT " 7- Reset Data                             "
+     PRINT " 11- Help                                   "
+
+
      PRINT "                                           "
      PRINT " 9- Exit                                   "
      PRINT "                                           "
@@ -333,18 +337,10 @@ SELECT CASE OPCION    '//Las diferentes opciones. The different options.
         'SI EL USUSARIO NO COLOCA UNA DE LAS OPCIONES CORRECTAS.
         'IF THE USER DOESN'T CHOOSE ONE OF THE GIVEN OPTIONS.
 
-        CASE 60
+        CASE 10 '------------------- CHANGE RATE SUB MENU
 
-        INPUT "How much is U$1 in Argentinean Pesos?"; DollarARS
-        MicroPause
+        CALL SubMenu
         GOTO ahorroini
-        
-        CASE 63
-
-        INPUT "How much is U$1 in BR Reals?"; DollarREAIS
-        MicroPause
-        GOTO ahorroini
-
 
         CASE 61 'OPCION 61 - AGREGAR DEPOSITO EN REALES
 
@@ -360,6 +356,10 @@ SELECT CASE OPCION    '//Las diferentes opciones. The different options.
 
                 GOTO ahorroini
 
+
+        CASE 11
+
+               CALL Help
 
         CASE 62 'OPCION 62 - RETIRAR DEPOSITO EN REALES
 
@@ -403,6 +403,22 @@ SELECT CASE OPCION    '//Las diferentes opciones. The different options.
 
 
 GOTO ahorroini
+
+SUB Help
+
+CLS
+
+PRINT "ARS | AR$ = Argentinean Pesos   "
+MicroPause
+PRINT "BRL | R$  = Brazillian Reals    "
+MicroPause
+PRINT "USD | U$  = United States Dollar"
+MicroPause
+
+PRINT
+WaitKey
+
+END SUB
 
 '====================== LOAD ======================
 'LOADS SAVED variables FROM the savings.bin file.
@@ -628,6 +644,73 @@ DO UNTIL xloop = (valor * scale) + 1
 LOOP
 
 
+END SUB
+
+SUB SubMenu
+
+SubMenu1:
+
+     CLS
+
+     COLOR 15, 5
+     LOCATE 1, 1
+     PRINT "           Savings Control V0.4            "
+     PRINT
+
+     COLOR 0, 7
+
+     PRINT "                                           "
+     PRINT " 1- Dollar --> ARS [AR$] - Change Rate     "
+     PRINT " 2- Dollar --> BRL [R$]  - Change Rate     "
+     PRINT "                                           "
+     PRINT " 9- Go back                                "
+     PRINT "                                           "
+
+     PRINT
+     COLOR 3, 0
+     INPUT OPCION
+
+SELECT CASE OPCION
+
+        CASE 1
+
+        INPUT "How much is 1 USD (U$1) in ARS?"; DollarARS
+        MicroPause
+
+        COLOR 15
+
+        LOCATE 3, 46
+        PRINT "1 U$D is equal to"; DollarARS; "AR$ now."
+        LOCATE 4, 46
+        PRINT "Currency values updated."
+        WaitKey
+
+        GOTO SubMenu1
+
+        CASE 2
+
+        INPUT "How much is 1 USD (U$1) in BRL (R$)?"; DollarREAIS
+        MicroPause
+
+        LOCATE 3, 46
+        PRINT "1 USD is equal to"; DollarREAIS; "BRL now."
+        LOCATE 4, 46
+        PRINT "Currency values updated."
+        WaitKey
+
+
+        GOTO SubMenu1
+        
+        CASE 9
+        GOTO EndSubMenu
+
+        CASE ELSE
+
+        GOTO SubMenu1
+
+END SELECT
+
+EndSubMenu:
 END SUB
 
 SUB WaitKey
