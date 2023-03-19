@@ -1,10 +1,11 @@
+DECLARE SUB SubMenu1 ()
 DECLARE SUB Help ()
 DECLARE SUB SubMenu ()
 DECLARE SUB WaitKey ()
 DECLARE SUB MicroPause ()
 DECLARE SUB ShowChart ()
-DECLARE SUB load ()
-DECLARE SUB save ()
+DECLARE SUB Load ()
+DECLARE SUB Save ()
 
 
 programasavings:
@@ -97,7 +98,7 @@ SLEEP 2
 
 'LOADS SAVINGS variables FROM the savings.bin file.
 CLS
-CALL load
+CALL Load
 
 CALL ShowChart        '============================================ CHARTS
 CALL WaitKey
@@ -133,18 +134,16 @@ CLS
      COLOR 0, 7
 
      PRINT "                                           "
-     PRINT " 1- Deposit money in local currency  ($)   "
+     PRINT " 1- Deposit money ($)                      "
      PRINT " 2- Withdraw money in local currency ($)   "
-     PRINT " 3- Deposit money in US dollar     (U$D)   "
      PRINT " 4- Withdraw money in US dollar    (U$D)   "
-     PRINT " 61- Deposit money in BR Reais (R$)        "
      PRINT " 62- Withdraw money in BR Reais (R$)       "
      PRINT " 10- Currencies Change Rates [ARS|BRL]     "
      PRINT " 6- Change % interest rates                "
      PRINT " 8- Show Charts                            "
      PRINT " 5- Savings Report                         "
      PRINT " 7- Reset Data                             "
-     PRINT " 11- Help                                   "
+     PRINT " 11- Help                                  "
 
 
      PRINT "                                           "
@@ -159,26 +158,8 @@ SELECT CASE OPCION    '//Las diferentes opciones. The different options.
 
         CASE 1: 'OPCION 1 - AGREGAR DINERO // ADD MONEY
 
-                LOCATE 15
-                PRINT "How much money to add?"
-                LOCATE 15, 22
-                INPUT ; dinero
-                PatrimonioTotal(0) = PatrimonioTotal(0) + dinero
-
-                'Coloca el dinero prestado nuevamente en la cuenta.
-                devolver = devolver - dinero
-                IF devolver < 0 THEN
-                devolver = 0
-                prestamo = 0
-                END IF
-
-                PRINT
-                PRINT "Usted posee un total de: ", PatrimonioTotal(0);
-
-                CALL WaitKey
-                GOTO ahorroini        'vuelve al ahorroini // goes back to the beginning of the program.
-
-
+                CALL SubMenu1
+                
         CASE 2 'OPCION 2 - RETIRAR DINERO // TAKE MONEY
                 PRINT
                 PRINT "How much money to withdraw?"
@@ -209,21 +190,6 @@ SELECT CASE OPCION    '//Las diferentes opciones. The different options.
 
                 GOTO ahorroini     'vuelve al ahorroini / goes back to the beginning of the program.
                 END IF
-
-
-
-        CASE 3 'OPCION 3 - AGREGAR DEPOSITO EN DOLARES / ADD DOLARS
-                PRINT
-                PRINT "How many dollars to add?"
-                INPUT dinero
-                PatrimonioTotal(1) = PatrimonioTotal(1) + dinero
-                PRINT
-                PRINT "Usted posee un total de (U$D)"
-                PRINT PatrimonioTotal(1);
-
-                CALL WaitKey
-
-                GOTO ahorroini
 
 
     CASE 4           'OPCION 4 - RETIRAR DEPOSITO EN DOLARES / TAKE DOLARS
@@ -272,8 +238,8 @@ SELECT CASE OPCION    '//Las diferentes opciones. The different options.
 
         CASE 7
                 PRINT
-                PRINT "Tienes certeza de que quieres eliminar TODOS los datos de AHORROS?"
-                PRINT "[10] SI [11] NO"
+                PRINT "Are you sure you want to erase all SAVINGS DATA?"
+                PRINT "[10] YES [11] NO"
                 PRINT
                 INPUT OPCION
 
@@ -289,13 +255,14 @@ SELECT CASE OPCION    '//Las diferentes opciones. The different options.
                                 PatrimonioTotal(0) = 0
                                 PatrimonioTotal(1) = 0
                                 PatrimonioTotal(2) = 0
+                                PatrimonioTotal(3) = 0
                                 prestamo = 0
                                 devolver = 0
                                 interes = 0
 
 
                                 PRINT
-                                PRINT "- TODOS LOS DATOS DE AHORROS HAN SIDO REINICIADOS - "
+                                PRINT "- All data has been deleted - "
 
                                 CALL WaitKey
                                 
@@ -303,7 +270,7 @@ SELECT CASE OPCION    '//Las diferentes opciones. The different options.
 
                         CASE 11
                                 PRINT
-                                PRINT "- ACCION CANCELADA - "
+                                PRINT "- Action cancelled - "
 
                                 CALL WaitKey
                                 
@@ -311,8 +278,8 @@ SELECT CASE OPCION    '//Las diferentes opciones. The different options.
 
                         CASE ELSE
                                 PRINT
-                                PRINT "- NO HAS COLOCADO NINGUNA DE LAS OPCIONES ANTERIORES - "
-                                PRINT "           MODIFICACIONES NO REALIZADAS"
+                                PRINT "- You have not chosen any possible option -"
+                                PRINT "       Action has been cancelled"
 
                                 CALL WaitKey
                                 
@@ -328,7 +295,7 @@ SELECT CASE OPCION    '//Las diferentes opciones. The different options.
 
 
         CASE 9
-                CALL save      'Saves PROGRAM variables into the savings.bin file.
+                CALL Save      'Saves PROGRAM variables into the savings.bin file.
                 CLS
                 END            'After that, ENDS the program.
 
@@ -341,21 +308,6 @@ SELECT CASE OPCION    '//Las diferentes opciones. The different options.
 
         CALL SubMenu
         GOTO ahorroini
-
-        CASE 61 'OPCION 61 - AGREGAR DEPOSITO EN REALES
-
-                PRINT
-                PRINT "How many Reals to add?"
-                INPUT dinero
-                PatrimonioTotal(3) = PatrimonioTotal(3) + dinero
-                PRINT
-                PRINT "Usted posee un total de (R$)"
-                PRINT PatrimonioTotal(3);
-
-                CALL WaitKey
-
-                GOTO ahorroini
-
 
         CASE 11
 
@@ -423,7 +375,7 @@ END SUB
 '====================== LOAD ======================
 'LOADS SAVED variables FROM the savings.bin file.
 '
-SUB load
+SUB Load
 
 OPEN "savings.bin" FOR INPUT AS #1
 INPUT #1, totalsav
@@ -463,8 +415,16 @@ END SUB
 
 SUB NOTES
 
-' * ADD ANIMATED CHART FOR SAVINGS IN REAL CURRENCY (BR CURRENCY)
+'TO DO
+
 ' * ORGANIZE THE MAIN MENU BETTER
+' * FINISH TRANSLATING INTO ENGLISH
+
+'================================================================
+
+' DONE
+
+' * ADD ANIMATED CHART FOR SAVINGS IN REAL CURRENCY (BR CURRENCY)
 
 
 END SUB
@@ -472,7 +432,7 @@ END SUB
 ' ================= SAVE ==========================
 ' Save PROGRAM variables into the savings.bin file.
 '
-SUB save
+SUB Save
 
 OPEN "savings.bin" FOR OUTPUT AS #1
 WRITE #1, totalsav
@@ -501,41 +461,59 @@ SUB ShowChart
 ARSChangeUSD = PatrimonioTotal(0) / DollarARS
 REAISChangeUSD = PatrimonioTotal(3) / DollarREAIS
 
-
-COLOR 2, 0
 CLS
-LOCATE 4, 1
-PRINT "U$D"; PatrimonioTotal(1)
-
 COLOR 15
 
-LOCATE 2, 48
+LOCATE 4, 43
 PRINT "1 U$D = AR$"; DollarARS; "| R$"; DollarREAIS
 
-LOCATE 4, 48
+CALL MicroPause
+
+LOCATE 6, 43
 PRINT "U$"; PatrimonioTotal(1); "[U$"; PatrimonioTotal(1); "]"
 
-LOCATE 6, 48
+CALL MicroPause
+
+LOCATE 8, 43
 PRINT "AR$"; PatrimonioTotal(0); "[U$"; ARSChangeUSD; "]"
 
-LOCATE 8, 48
+CALL MicroPause
+
+LOCATE 10, 43
 PRINT "R$"; PatrimonioTotal(3); "[U$"; REAISChangeUSD; "]"
+
+CALL MicroPause
 
 TotalDollars = PatrimonioTotal(1) + ARSChangeUSD + REAISChangeUSD
 
-LOCATE 10, 46
+CALL MicroPause
+
+LOCATE 12, 43
 
 PRINT "TOTAL in US Dollars = U$D"; TotalDollars
 
-COLOR 7, 0
-LOCATE 8, 1
-PRINT "AR$"; PatrimonioTotal(0)
+CALL MicroPause
 
+'============================================================================
+'Text that goes along the charts to express quantity.
+
+
+COLOR 2, 0
+LOCATE 4, 1
+PRINT "USD $"; PatrimonioTotal(1)
+
+COLOR 14, 0
+LOCATE 8, 1
+PRINT "BRL $"; PatrimonioTotal(3)
+
+COLOR 9, 0
+LOCATE 12, 1
+PRINT "ARS $"; PatrimonioTotal(0)
 
 '============================================================================
 
-scale = 0
 COLOR 2, 0
+scale = 0
 
 IF PatrimonioTotal(1) > 0 THEN
 valor = PatrimonioTotal(1)
@@ -572,10 +550,9 @@ valor = PatrimonioTotal(1) / 1000000
 scale = 7
 END IF
 
-'PRINT valor
-xloop = 1
-
 '========================== Prints U$D CHART
+
+xloop = 1
 
 DO UNTIL xloop = (valor * scale) + 1
 
@@ -591,7 +568,63 @@ LOOP
 '========================================================================
 
 scale = 0
-COLOR 7, 0
+COLOR 14, 0
+
+IF PatrimonioTotal(3) > 0 THEN
+valor = PatrimonioTotal(3)
+scale = 1
+END IF
+
+IF PatrimonioTotal(3) > 10 THEN
+valor = PatrimonioTotal(3) / 10
+scale = 2
+END IF
+
+IF PatrimonioTotal(3) > 100 THEN
+valor = PatrimonioTotal(3) / 100
+scale = 3
+END IF
+
+IF PatrimonioTotal(3) > 1000 THEN
+valor = PatrimonioTotal(3) / 1000
+scale = 4
+END IF
+
+IF PatrimonioTotal(3) > 10000 THEN
+valor = PatrimonioTotal(3) / 10000
+scale = 5
+END IF
+
+IF PatrimonioTotal(3) > 100000 THEN
+valor = PatrimonioTotal(3) / 100000
+scale = 6
+END IF
+
+IF PatrimonioTotal(3) > 1000000 THEN
+valor = PatrimonioTotal(3) / 1000000
+scale = 7
+END IF
+
+xloop = 1
+
+'========================== Prints BRL CHART [R$]
+
+
+DO UNTIL xloop = (valor * scale) + 1
+
+        LOCATE 10, xloop
+        PRINT "°"
+        xloop = xloop + 1
+        CALL MicroPause
+
+LOOP
+
+'========================================================================
+'========================================================================
+'========================================================================
+
+scale = 0
+COLOR 9, 0
 
 IF PatrimonioTotal(0) > 0 THEN
 valor = PatrimonioTotal(0)
@@ -628,7 +661,6 @@ valor = PatrimonioTotal(0) / 1000000
 scale = 7
 END IF
 
-'PRINT valor
 xloop = 1
 
 '========================== Prints U$D CHART
@@ -636,7 +668,7 @@ xloop = 1
 
 DO UNTIL xloop = (valor * scale) + 1
 
-        LOCATE 10, xloop
+        LOCATE 14, xloop
         PRINT "°"
         xloop = xloop + 1
         CALL MicroPause
@@ -648,7 +680,7 @@ END SUB
 
 SUB SubMenu
 
-SubMenu1:
+SubMenu:
 
      CLS
 
@@ -685,7 +717,7 @@ SELECT CASE OPCION
         PRINT "Currency values updated."
         WaitKey
 
-        GOTO SubMenu1
+        GOTO SubMenu
 
         CASE 2
 
@@ -699,18 +731,105 @@ SELECT CASE OPCION
         WaitKey
 
 
-        GOTO SubMenu1
+        GOTO SubMenu
         
         CASE 9
         GOTO EndSubMenu
 
         CASE ELSE
 
-        GOTO SubMenu1
+        GOTO SubMenu
 
 END SELECT
 
 EndSubMenu:
+END SUB
+
+SUB SubMenu1
+
+SubMenu1:
+
+     CLS
+
+     COLOR 15, 5
+     LOCATE 1, 1
+     PRINT "           Savings Control V0.4            "
+     PRINT
+
+     COLOR 0, 7
+
+     PRINT " 1- Deposit money in local currency ($)    "
+     PRINT " 2- Deposit money in US dollar      (U$D)  "
+     PRINT " 3- Deposit money in BR Reais       (R$)   "
+     PRINT "                                           "
+     PRINT " 9- Go Back                                "
+
+
+
+     PRINT
+     COLOR 3, 0
+     INPUT OPCION
+
+
+SELECT CASE OPCION
+        
+        CASE 1 'AGREGAR DEPOSITO EN MONEDA LOCAL / ADD LOCAL CURRENCY
+
+                LOCATE 15
+                PRINT "How much money to add?"
+                LOCATE 15, 22
+                INPUT ; dinero
+                PatrimonioTotal(0) = PatrimonioTotal(0) + dinero
+
+                'Coloca el dinero prestado nuevamente en la cuenta.
+                devolver = devolver - dinero
+                IF devolver < 0 THEN
+                devolver = 0
+                prestamo = 0
+                END IF
+
+                PRINT
+                PRINT "Usted posee un total de: ", PatrimonioTotal(0);
+
+                CALL WaitKey
+                GOTO SubMenu1        'vuelve al ahorroini // goes back to the beginning of the program.
+        
+        CASE 2 'AGREGAR DEPOSITO EN DOLARES / ADD DOLARS
+
+                PRINT
+                PRINT "How many dollars to add?"
+                INPUT dinero
+                PatrimonioTotal(1) = PatrimonioTotal(1) + dinero
+                PRINT
+                PRINT "Usted posee un total de (U$D)"
+                PRINT PatrimonioTotal(1);
+
+                CALL WaitKey
+
+                GOTO SubMenu1
+        
+        CASE 3 'AGREGAR DEPOSITO EN REALES / ADD REALS
+
+                PRINT
+                PRINT "How many Reals to add?"
+                INPUT dinero
+                PatrimonioTotal(3) = PatrimonioTotal(3) + dinero
+                PRINT
+                PRINT "Usted posee un total de (R$)"
+                PRINT PatrimonioTotal(3);
+
+                CALL WaitKey
+
+                GOTO SubMenu1
+
+        CASE 9
+                GOTO EndSubMenu1
+                CASE ELSE
+                GOTO SubMenu1
+
+END SELECT
+
+EndSubMenu1:
 END SUB
 
 SUB WaitKey
