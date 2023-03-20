@@ -1,3 +1,4 @@
+DECLARE SUB SubMenu2 ()
 DECLARE SUB SubMenu1 ()
 DECLARE SUB Help ()
 DECLARE SUB SubMenu ()
@@ -27,20 +28,20 @@ programasavings:
 'dollars and for the totalsav amount. They'll follow that order 0, 1, 2.
 
 
-DIM SHARED PatrimonioTotal(0 TO 3) AS CURRENCY
-DIM SHARED dinero AS CURRENCY
-DIM SHARED totalsav AS CURRENCY
+DIM SHARED PatrimonioTotal(0 TO 3) AS SINGLE
+DIM SHARED dinero AS SINGLE
+DIM SHARED totalsav AS SINGLE
 
-DIM SHARED prestamo AS CURRENCY
-DIM SHARED interes AS CURRENCY
-DIM SHARED DollarARS AS CURRENCY
-DIM SHARED DollarREAIS AS CURRENCY
-DIM SHARED ARSChangeUSD AS CURRENCY
-DIM SHARED REAISChangeUSD AS CURRENCY
-DIM SHARED TotalDollars AS CURRENCY
+DIM SHARED prestamo AS SINGLE
+DIM SHARED interes AS SINGLE
+DIM SHARED DollarARS AS SINGLE
+DIM SHARED DollarREAIS AS SINGLE
+DIM SHARED ARSChangeUSD AS SINGLE
+DIM SHARED REAISChangeUSD AS SINGLE
+DIM SHARED TotalDollars AS SINGLE
 
 
-DIM SHARED devolver AS CURRENCY
+DIM SHARED devolver AS SINGLE
 DIM SHARED xloop AS INTEGER
 DIM SHARED valor AS INTEGER
 
@@ -128,24 +129,20 @@ CLS
 
      COLOR 15, 5
      LOCATE 1, 1
-     PRINT "           Savings Control V0.4            "
+     PRINT "           Savings Control V0.5            "
      PRINT
      
      COLOR 0, 7
 
      PRINT "                                           "
-     PRINT " 1- Deposit money ($)                      "
-     PRINT " 2- Withdraw money in local currency ($)   "
-     PRINT " 4- Withdraw money in US dollar    (U$D)   "
-     PRINT " 62- Withdraw money in BR Reais (R$)       "
+     PRINT " 1- Deposit money  ($)                     "
+     PRINT " 2- Withdraw money ($)                     "
      PRINT " 10- Currencies Change Rates [ARS|BRL]     "
      PRINT " 6- Change % interest rates                "
      PRINT " 8- Show Charts                            "
      PRINT " 5- Savings Report                         "
      PRINT " 7- Reset Data                             "
      PRINT " 11- Help                                  "
-
-
      PRINT "                                           "
      PRINT " 9- Exit                                   "
      PRINT "                                           "
@@ -156,87 +153,34 @@ CLS
 
 SELECT CASE OPCION    '//Las diferentes opciones. The different options.
 
-        CASE 1: 'OPCION 1 - AGREGAR DINERO // ADD MONEY
+        CASE 1: 'OPCION 1 - AGREGAR DINERO // DEPOSIT MONEY
 
-                CALL SubMenu1
+                SubMenu1
                 
-        CASE 2 'OPCION 2 - RETIRAR DINERO // TAKE MONEY
+        CASE 2  'OPCION 2 - TOMAR DINERO // WITHDRAW MONEY
+
+                SubMenu2
+        
+        CASE 5       'OPCION 5 - MOSTRAR AHORROS / SHOW SAVINGS DETAILS
                 PRINT
-                PRINT "How much money to withdraw?"
-                INPUT dinero
-                totalsav = PatrimonioTotal(0)
-                totalsav = totalsav - dinero
-
-
-                IF totalsav < 0 THEN
-                PRINT "You don't have that money."
-
-                CALL WaitKey
-                GOTO ahorroini
-                END IF
-
-                IF totalsav >= 0 THEN
+                PRINT "Total de dinero en moneda local:   "; PatrimonioTotal(0)
+                PRINT "Total de dinero en dolares:        "; PatrimonioTotal(1)
                 PRINT
-                PRINT "Dinero retirado. Usted posee un total de: ";
-                PatrimonioTotal(0) = totalsav
-                PRINT PatrimonioTotal(0)
-                prestamo = prestamo + dinero
+                PRINT "La taza de inter‚s es del "; tazadeinteres; "% "
+                PRINT "Dinero tomado de la cuenta en moneda local:    "; prestamo
+                PRINT "Dinero a colocar en la cuenta con intereses:   "; devolver
 
-                'VARIABLES DE PRESTAMOS E INTERESES
-                interes = (prestamo * tazadeinteres) / 100
-                devolver = prestamo + interes
+                WaitKey
 
-                CALL WaitKey
+                GOTO ahorroini   'vuelve al ahorroini / goes back to the beginning of the program.
 
-                GOTO ahorroini     'vuelve al ahorroini / goes back to the beginning of the program.
-                END IF
-
-
-    CASE 4           'OPCION 4 - RETIRAR DEPOSITO EN DOLARES / TAKE DOLARS
-    PRINT
-    PRINT "Cuanto dinero en dolares desea retirar?"
-    INPUT dinero
-    totalsav = PatrimonioTotal(1)
-    totalsav = totalsav - dinero
-
-    IF totalsav < 0 THEN
-    PRINT "Usted no tiene ese dinero."
-
-    CALL WaitKey
-    
-    GOTO ahorroini
-    END IF
-
-    IF totalsav >= 0 THEN
-    PRINT "Dinero retirado en U$D. Usted posee un total de: "
-    PatrimonioTotal(1) = totalsav
-    PRINT PatrimonioTotal(1);
-
-    CALL WaitKey
-    
-    GOTO ahorroini       'vuelve al ahorroini / goes back to the beginning of the program.
-    END IF
-
-
-    CASE 5       'OPCION 5 - MOSTRAR AHORROS / SHOW SAVINGS DETAILS
-    PRINT
-    PRINT "Total de dinero en moneda local:   "; PatrimonioTotal(0)
-    PRINT "Total de dinero en dolares:        "; PatrimonioTotal(1)
-    PRINT
-    PRINT "La taza de inter‚s es del "; tazadeinteres; "% "
-    PRINT "Dinero tomado de la cuenta en moneda local:    "; prestamo
-    PRINT "Dinero a colocar en la cuenta con intereses:   "; devolver
-
-    CALL WaitKey
-
-    GOTO ahorroini   'vuelve al ahorroini / goes back to the beginning of the program.
-
-    CASE 6
-    PRINT "Cual es el porcentaje que deber  ser agregado luego de un prestamo?"
-    INPUT "Ingrese el n£mero deseado (10%, 15%, 20%)"; tazadeinteres
+        CASE 6
+                PRINT "Cual es el porcentaje que deber  ser agregado luego de un prestamo?"
+                INPUT "Ingrese el n£mero deseado (10%, 15%, 20%)"; tazadeinteres
 
 
         CASE 7
+
                 PRINT
                 PRINT "Are you sure you want to erase all SAVINGS DATA?"
                 PRINT "[10] YES [11] NO"
@@ -306,51 +250,18 @@ SELECT CASE OPCION    '//Las diferentes opciones. The different options.
 
         CASE 10 '------------------- CHANGE RATE SUB MENU
 
-        CALL SubMenu
+        SubMenu
         GOTO ahorroini
 
         CASE 11
 
-               CALL Help
-
-        CASE 62 'OPCION 62 - RETIRAR DEPOSITO EN REALES
-
-                PRINT
-                PRINT "Cuanto dinero en reales desea retirar?"
-                INPUT dinero
-                totalsav = PatrimonioTotal(3)
-                totalsav = totalsav - dinero
-
-                IF totalsav < 0 THEN
-                PRINT "Usted no tiene ese dinero."
-
-                CALL WaitKey
-
-                GOTO ahorroini
-                END IF
-
-                IF totalsav >= 0 THEN
-                PRINT "Dinero retirado en R$. Usted posee un total de: "
-                PatrimonioTotal(3) = totalsav
-                PRINT PatrimonioTotal(3);
-
-                CALL WaitKey
-
-                GOTO ahorroini       'vuelve al ahorroini / goes back to the beginning of the program.
-                END IF
-
+               Help
 
         CASE ELSE
 
-                PRINT "Ingrese una opcion correcta."
-
-                CALL WaitKey
-                
-                'vuelve al ahorroini
+                'No hace nada y vuelve al ahorroini
                 'goes back to the beginning of the program.
-
-                GOTO ahorroini
-
+                
         END SELECT
 
 
@@ -686,7 +597,7 @@ SubMenu:
 
      COLOR 15, 5
      LOCATE 1, 1
-     PRINT "           Savings Control V0.4            "
+     PRINT "           Savings Control V0.5            "
      PRINT
 
      COLOR 0, 7
@@ -753,17 +664,18 @@ SubMenu1:
 
      COLOR 15, 5
      LOCATE 1, 1
-     PRINT "           Savings Control V0.4            "
+     PRINT "           Savings Control V0.5            "
      PRINT
 
      COLOR 0, 7
 
-     PRINT " 1- Deposit money in local currency ($)    "
-     PRINT " 2- Deposit money in US dollar      (U$D)  "
-     PRINT " 3- Deposit money in BR Reais       (R$)   "
+     PRINT "                                           "
+     PRINT " 1- Deposit money in local currency (ARS)  "
+     PRINT " 2- Deposit money in US dollar      (USD)  "
+     PRINT " 3- Deposit money in BR Reais       (BRL)  "
      PRINT "                                           "
      PRINT " 9- Go Back                                "
-
+     PRINT "                                           "
 
 
      PRINT
@@ -830,6 +742,147 @@ SELECT CASE OPCION
 END SELECT
 
 EndSubMenu1:
+END SUB
+
+SUB SubMenu2  'OPCION 2 - RETIRAR DINERO // WITHDRAW MONEY
+
+SubMenu2A:
+
+CLS
+
+COLOR 15, 5
+LOCATE 1, 1
+PRINT "           Savings Control V0.5            "
+PRINT
+
+COLOR 0, 7
+     
+PRINT "                                           "
+PRINT " 1- Withdraw money in local currency (ARS) "
+PRINT " 2- Withdraw money in BR Reais       (BRL) "
+PRINT " 3- Withdraw money in US dollar      (USD) "
+
+PRINT "                                           "
+PRINT " 9- Go Back                                "
+PRINT "                                           "
+
+     PRINT
+     COLOR 3, 0
+     INPUT OPCION
+
+
+SELECT CASE OPCION
+
+        CASE 1  'OPCION 1 - RETIRAR DEPOSITO EN PESOS / TAKE ARS
+
+                PRINT
+                PRINT "How much money to withdraw?"
+                INPUT dinero
+                totalsav = PatrimonioTotal(0)
+                totalsav = totalsav - dinero
+
+                IF totalsav < 0 THEN
+
+                        PRINT "You don't have that money."
+                        WaitKey
+                        GOTO EndSubMenu2A
+
+                END IF
+
+                IF totalsav >= 0 THEN
+
+                        PRINT
+                        PRINT "Dinero retirado. Usted posee un total de: ";
+                        PatrimonioTotal(0) = totalsav
+                        PRINT PatrimonioTotal(0)
+                        prestamo = prestamo + dinero
+
+                        'VARIABLES DE PRESTAMOS E INTERESES
+                        interes = (prestamo * tazadeinteres) / 100
+                        devolver = prestamo + interes
+
+                        WaitKey
+
+                        'Vuelve al ahorroini.
+                        'Goes back to the beginning of the program.
+
+                        GOTO EndSubMenu2A
+
+                END IF
+
+
+        CASE 2  'OPCION 2 - RETIRAR DEPOSITO EN REALES / TAKE BRL
+        
+                PRINT
+                PRINT "Cuanto dinero en reales desea retirar?"
+                INPUT dinero
+                totalsav = PatrimonioTotal(3)
+                totalsav = totalsav - dinero
+
+                IF totalsav < 0 THEN
+
+                        PRINT "Usted no tiene ese dinero."
+                        WaitKey
+                        GOTO EndSubMenu2A
+
+                END IF
+
+                IF totalsav >= 0 THEN
+
+                        PRINT "Dinero retirado en R$. Usted posee un total de: "
+                        PatrimonioTotal(3) = totalsav
+                        PRINT PatrimonioTotal(3);
+                        CALL WaitKey
+
+                        'Vuelve al ahorroini.
+                        'Goes back to the beginning of the program.
+
+                        GOTO EndSubMenu2A
+
+                END IF
+
+        CASE 3  'OPCION 3 - RETIRAR DEPOSITO EN DOLARES / TAKE USD
+
+                PRINT
+                PRINT "Cuanto dinero en dolares desea retirar?"
+                INPUT dinero
+                totalsav = PatrimonioTotal(1)
+                totalsav = totalsav - dinero
+
+                IF totalsav < 0 THEN
+
+                        PRINT "Usted no tiene ese dinero."
+                        WaitKey
+                        GOTO EndSubMenu2A
+
+                END IF
+
+                IF totalsav >= 0 THEN
+
+                        PRINT "Dinero retirado en U$D. Usted posee un total de: "
+                        PatrimonioTotal(1) = totalsav
+                        PRINT PatrimonioTotal(1);
+                        WaitKey
+
+                        'Vuelve al ahorroini.
+                        'Goes back to the beginning of the program.
+
+                        GOTO EndSubMenu2A
+
+                END IF
+
+
+        CASE 9
+
+                GOTO EndSubMenu2A
+
+        CASE ELSE
+
+                GOTO SubMenu2A
+
+END SELECT
+
+EndSubMenu2A:
 END SUB
 
 SUB WaitKey
