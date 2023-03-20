@@ -17,6 +17,6 @@ MERCADO: It is a simple application that helps you tracking the price of items a
 
 SAVINGS: Simple application that helps you track your savings. Aimed to work with different currencies as AR$ and U$D. I'll be adding Brazillian Reais (R$) soon. It also shows a very simple chart and makes some basic currency conversions from Argentinean Pesos to Dollar.
 
-Note: SAVINGS2.BAS is the same program but the FreeBasic version. I had to change some parts of the code to be able to compile it so I could export it to Windows and  Linux.
+Note: SAVINGS2.BAS is the same program but the FreeBasic version. I had to change some parts of the code to be able to compile it so I could export it to Windows 64 and  Linux.
 
 --------------------
