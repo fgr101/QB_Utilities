@@ -8,7 +8,6 @@ DECLARE SUB ShowChart ()
 DECLARE SUB Load ()
 DECLARE SUB Save ()
 
-
 programasavings:
 
 '============================================================================
@@ -137,10 +136,10 @@ CLS
      PRINT "                                           "
      PRINT " 1- Deposit money  ($)                     "
      PRINT " 2- Withdraw money ($)                     "
-     PRINT " 10- Currencies Change Rates [ARS|BRL]     "
+     PRINT " 3- Savings Report                         "
+     PRINT " 4- Show Charts                            "
+     PRINT " 10- Exchange Rates [ARS|BRL]              "
      PRINT " 6- Change % interest rates                "
-     PRINT " 8- Show Charts                            "
-     PRINT " 5- Savings Report                         "
      PRINT " 7- Reset Data                             "
      PRINT " 11- Help                                  "
      PRINT "                                           "
@@ -161,7 +160,8 @@ SELECT CASE OPCION    '//Las diferentes opciones. The different options.
 
                 SubMenu2
         
-        CASE 5       'OPCION 5 - MOSTRAR AHORROS / SHOW SAVINGS DETAILS
+        CASE 3  'OPCION 3 - MOSTRAR AHORROS / SHOW SAVINGS DETAILS
+
                 PRINT
                 PRINT "Total de dinero en moneda local:   "; PatrimonioTotal(0)
                 PRINT "Total de dinero en dolares:        "; PatrimonioTotal(1)
@@ -173,6 +173,13 @@ SELECT CASE OPCION    '//Las diferentes opciones. The different options.
                 WaitKey
 
                 GOTO ahorroini   'vuelve al ahorroini / goes back to the beginning of the program.
+
+        CASE 4  'OPCION 4 ============= Show Charts ===============
+
+                ShowChart
+                WaitKey
+                GOTO ahorroini
+
 
         CASE 6
                 PRINT "Cual es el porcentaje que deber  ser agregado luego de un prestamo?"
@@ -231,13 +238,6 @@ SELECT CASE OPCION    '//Las diferentes opciones. The different options.
                 END SELECT
 
 
-        CASE 8  '============= Show Charts ===============
-
-                CALL ShowChart
-                CALL WaitKey
-                GOTO ahorroini
-
-
         CASE 9
                 CALL Save      'Saves PROGRAM variables into the savings.bin file.
                 CLS
@@ -279,6 +279,46 @@ PRINT "USD | U$  = United States Dollar"
 MicroPause
 
 PRINT
+PRINT "Currency Exchange Rates"
+MicroPause
+PRINT "======================="
+MicroPause
+PRINT
+
+PRINT "Currency exchange rates refer to the value of one currency compared"
+MicroPause
+PRINT "to another currency. These rates determine how much of one currency"
+MicroPause
+PRINT "you can exchange for another currency. Exchange rates are determined"
+MicroPause
+PRINT "by various factors such as the supply and demand of currencies, political"
+MicroPause
+PRINT "and economic factors, and central bank policies. Currency exchange rates"
+MicroPause
+PRINT "can fluctuate frequently, sometimes even within minutes, and impact"
+MicroPause
+PRINT "international trade, investments, and travel."
+PRINT
+
+WaitKey
+
+PRINT "Saving Data"
+PRINT "============="
+PRINT
+
+PRINT "You don't need to worry about saving and loading data. Every time you exit"
+MicroPause
+PRINT "the program, all data and variables are automatically saved. They will also"
+MicroPause
+PRINT "be loaded automatically for you when you run the program again."
+
+PRINT
+PRINT "If you ever need to erase and reset all the variables stored in the"
+MicroPause
+PRINT "computer's memory and all the data stored, you can do so by using the"
+MicroPause
+PRINT "option 'Reset Data'."
+
 WaitKey
 
 END SUB
@@ -603,8 +643,8 @@ SubMenu:
      COLOR 0, 7
 
      PRINT "                                           "
-     PRINT " 1- Dollar --> ARS [AR$] - Change Rate     "
-     PRINT " 2- Dollar --> BRL [R$]  - Change Rate     "
+     PRINT " 1- Dollar --> ARS [AR$] - Exchange Rate   "
+     PRINT " 2- Dollar --> BRL [R$]  - Exchange Rate   "
      PRINT "                                           "
      PRINT " 9- Go back                                "
      PRINT "                                           "
