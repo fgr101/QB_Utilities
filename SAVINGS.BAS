@@ -1,6 +1,7 @@
+DECLARE SUB SubMenu3 ()
 DECLARE SUB SubMenu2 ()
 DECLARE SUB SubMenu1 ()
-DECLARE SUB Help ()
+DECLARE SUB HELP ()
 DECLARE SUB SubMenu ()
 DECLARE SUB WaitKey ()
 DECLARE SUB MicroPause ()
@@ -37,12 +38,19 @@ DIM SHARED DollarARS AS SINGLE
 DIM SHARED DollarREAIS AS SINGLE
 DIM SHARED ARSChangeUSD AS SINGLE
 DIM SHARED REAISChangeUSD AS SINGLE
+
 DIM SHARED TotalDollars AS SINGLE
 
 
 DIM SHARED devolver AS SINGLE
 DIM SHARED xloop AS INTEGER
 DIM SHARED valor AS INTEGER
+
+DIM SHARED OPCION AS INTEGER
+DIM SHARED tazadeinteres AS INTEGER
+DIM SHARED scale AS INTEGER
+DIM SHARED aloop AS INTEGER
+
 
 OPCION = 0
 tazadeinteres = 10
@@ -123,7 +131,7 @@ CLS
      LOCATE 1, 46
      PRINT "Deposits: $"; PatrimonioTotal(0); "| U$"; PatrimonioTotal(1); "| R$"; PatrimonioTotal(3)
      LOCATE 2, 46
-     PRINT "A reponer: $"; devolver; "(+"; tazadeinteres; "%)"
+     PRINT "To be Returned: $"; devolver; "(+"; tazadeinteres; "%)"
 
 
      COLOR 15, 5
@@ -138,19 +146,18 @@ CLS
      PRINT " 2- Withdraw money ($)                     "
      PRINT " 3- Savings Report                         "
      PRINT " 4- Show Charts                            "
-     PRINT " 10- Exchange Rates [ARS|BRL]              "
-     PRINT " 6- Change % interest rates                "
-     PRINT " 7- Reset Data                             "
-     PRINT " 11- Help                                  "
+     PRINT " 5- Options                                "
+     PRINT " 6- Help                                   "
      PRINT "                                           "
      PRINT " 9- Exit                                   "
      PRINT "                                           "
 
      PRINT
      COLOR 3, 0
-     INPUT OPCION
 
-SELECT CASE OPCION    '//Las diferentes opciones. The different options.
+     INPUT "* ", OPCION
+
+SELECT CASE OPCION '//Las diferentes opciones. The different options.
 
         CASE 1: 'OPCION 1 - AGREGAR DINERO // DEPOSIT MONEY
 
@@ -163,13 +170,13 @@ SELECT CASE OPCION    '//Las diferentes opciones. The different options.
         CASE 3  'OPCION 3 - MOSTRAR AHORROS / SHOW SAVINGS DETAILS
 
                 PRINT
-                PRINT "Total de dinero en moneda local:   "; PatrimonioTotal(0)
-                PRINT "Total de dinero en dolares:        "; PatrimonioTotal(1)
+                PRINT "Total amount of money in local currency: $"; PatrimonioTotal(0); "ARS"
+                PRINT "Total amount of money in dollars: $"; PatrimonioTotal(1); "USD"
                 PRINT
-                PRINT "La taza de inter‚s es del "; tazadeinteres; "% "
-                PRINT "Dinero tomado de la cuenta en moneda local:    "; prestamo
-                PRINT "Dinero a colocar en la cuenta con intereses:   "; devolver
-
+                PRINT "The interest rate is "; tazadeinteres; "%"
+                PRINT "Money taken from the account in local currency: $"; prestamo; "ARS"
+                PRINT "Money to be placed in the account with interest: $"; devolver; "ARS"
+            
                 WaitKey
 
                 GOTO ahorroini   'vuelve al ahorroini / goes back to the beginning of the program.
@@ -180,82 +187,23 @@ SELECT CASE OPCION    '//Las diferentes opciones. The different options.
                 WaitKey
                 GOTO ahorroini
 
+        CASE 5  'OPCION 5 - OPCIONES / OPTIONS
 
-        CASE 6
-                PRINT "Cual es el porcentaje que deber  ser agregado luego de un prestamo?"
-                INPUT "Ingrese el n£mero deseado (10%, 15%, 20%)"; tazadeinteres
+                SubMenu3
 
+        CASE 6 'OPCION 6 - AYUDA / HELP
 
-        CASE 7
+                HELP
 
-                PRINT
-                PRINT "Are you sure you want to erase all SAVINGS DATA?"
-                PRINT "[10] YES [11] NO"
-                PRINT
-                INPUT OPCION
+        CASE 9  'Saves PROGRAM variables into the savings.bin file.
+                'After that, ENDS the program.
 
-
-
-                SELECT CASE OPCION
-
-                'BORRA TODAS LAS VARIABLES DE AHORROS
-
-                        CASE 10
-                                totalsav = 0
-                                dinero = 0
-                                PatrimonioTotal(0) = 0
-                                PatrimonioTotal(1) = 0
-                                PatrimonioTotal(2) = 0
-                                PatrimonioTotal(3) = 0
-                                prestamo = 0
-                                devolver = 0
-                                interes = 0
-
-
-                                PRINT
-                                PRINT "- All data has been deleted - "
-
-                                CALL WaitKey
-                                
-                                GOTO ahorroini
-
-                        CASE 11
-                                PRINT
-                                PRINT "- Action cancelled - "
-
-                                CALL WaitKey
-                                
-                                GOTO ahorroini
-
-                        CASE ELSE
-                                PRINT
-                                PRINT "- You have not chosen any possible option -"
-                                PRINT "       Action has been cancelled"
-
-                                CALL WaitKey
-                                
-                                GOTO ahorroini
-                END SELECT
-
-
-        CASE 9
-                CALL Save      'Saves PROGRAM variables into the savings.bin file.
+                Save
                 CLS
-                END            'After that, ENDS the program.
-
-                
-
+                END
+        
         'SI EL USUSARIO NO COLOCA UNA DE LAS OPCIONES CORRECTAS.
         'IF THE USER DOESN'T CHOOSE ONE OF THE GIVEN OPTIONS.
-
-        CASE 10 '------------------- CHANGE RATE SUB MENU
-
-        SubMenu
-        GOTO ahorroini
-
-        CASE 11
-
-               Help
 
         CASE ELSE
 
@@ -267,7 +215,7 @@ SELECT CASE OPCION    '//Las diferentes opciones. The different options.
 
 GOTO ahorroini
 
-SUB Help
+SUB HELP
 
 CLS
 
@@ -651,20 +599,21 @@ SubMenu:
 
      PRINT
      COLOR 3, 0
-     INPUT OPCION
+     INPUT "* ", OPCION
 
 SELECT CASE OPCION
 
         CASE 1
 
+        PRINT
         INPUT "How much is 1 USD (U$1) in ARS?"; DollarARS
         MicroPause
 
-        COLOR 15
+        COLOR 7
 
-        LOCATE 3, 46
+        LOCATE 1, 46
         PRINT "1 U$D is equal to"; DollarARS; "AR$ now."
-        LOCATE 4, 46
+        LOCATE 2, 46
         PRINT "Currency values updated."
         WaitKey
 
@@ -672,12 +621,15 @@ SELECT CASE OPCION
 
         CASE 2
 
+        PRINT
         INPUT "How much is 1 USD (U$1) in BRL (R$)?"; DollarREAIS
         MicroPause
 
-        LOCATE 3, 46
+        COLOR 7
+
+        LOCATE 1, 46
         PRINT "1 USD is equal to"; DollarREAIS; "BRL now."
-        LOCATE 4, 46
+        LOCATE 2, 46
         PRINT "Currency values updated."
         WaitKey
 
@@ -720,7 +672,7 @@ SubMenu1:
 
      PRINT
      COLOR 3, 0
-     INPUT OPCION
+     INPUT "* ", OPCION
 
 
 SELECT CASE OPCION
@@ -741,7 +693,7 @@ SELECT CASE OPCION
                 END IF
 
                 PRINT
-                PRINT "Usted posee un total de: ", PatrimonioTotal(0);
+                PRINT "You have a total of: ", PatrimonioTotal(0);
 
                 CALL WaitKey
                 GOTO SubMenu1        'vuelve al ahorroini // goes back to the beginning of the program.
@@ -753,7 +705,7 @@ SELECT CASE OPCION
                 INPUT dinero
                 PatrimonioTotal(1) = PatrimonioTotal(1) + dinero
                 PRINT
-                PRINT "Usted posee un total de (U$D)"
+                PRINT "You have a total of (U$D)"
                 PRINT PatrimonioTotal(1);
 
                 CALL WaitKey
@@ -767,7 +719,7 @@ SELECT CASE OPCION
                 INPUT dinero
                 PatrimonioTotal(3) = PatrimonioTotal(3) + dinero
                 PRINT
-                PRINT "Usted posee un total de (R$)"
+                PRINT "You have a total of (R$)"
                 PRINT PatrimonioTotal(3);
 
                 CALL WaitKey
@@ -808,7 +760,7 @@ PRINT "                                           "
 
      PRINT
      COLOR 3, 0
-     INPUT OPCION
+     INPUT "* ", OPCION
 
 
 SELECT CASE OPCION
@@ -825,14 +777,14 @@ SELECT CASE OPCION
 
                         PRINT "You don't have that money."
                         WaitKey
-                        GOTO EndSubMenu2A
+                        GOTO SubMenu2A
 
                 END IF
 
                 IF totalsav >= 0 THEN
 
                         PRINT
-                        PRINT "Dinero retirado. Usted posee un total de: ";
+                        PRINT "Money withdrawn. You have a total of: ";
                         PatrimonioTotal(0) = totalsav
                         PRINT PatrimonioTotal(0)
                         prestamo = prestamo + dinero
@@ -846,7 +798,7 @@ SELECT CASE OPCION
                         'Vuelve al ahorroini.
                         'Goes back to the beginning of the program.
 
-                        GOTO EndSubMenu2A
+                        GOTO SubMenu2A
 
                 END IF
 
@@ -854,22 +806,22 @@ SELECT CASE OPCION
         CASE 2  'OPCION 2 - RETIRAR DEPOSITO EN REALES / TAKE BRL
         
                 PRINT
-                PRINT "Cuanto dinero en reales desea retirar?"
+                PRINT "How much money in BRL do you want to withdraw?"
                 INPUT dinero
                 totalsav = PatrimonioTotal(3)
                 totalsav = totalsav - dinero
 
                 IF totalsav < 0 THEN
 
-                        PRINT "Usted no tiene ese dinero."
+                        PRINT "You don't have tha money."
                         WaitKey
-                        GOTO EndSubMenu2A
+                        GOTO SubMenu2A
 
                 END IF
 
                 IF totalsav >= 0 THEN
 
-                        PRINT "Dinero retirado en R$. Usted posee un total de: "
+                        PRINT "Money withdrawn in BRL. You have a total of: "
                         PatrimonioTotal(3) = totalsav
                         PRINT PatrimonioTotal(3);
                         CALL WaitKey
@@ -877,29 +829,29 @@ SELECT CASE OPCION
                         'Vuelve al ahorroini.
                         'Goes back to the beginning of the program.
 
-                        GOTO EndSubMenu2A
+                        GOTO SubMenu2A
 
                 END IF
 
         CASE 3  'OPCION 3 - RETIRAR DEPOSITO EN DOLARES / TAKE USD
 
                 PRINT
-                PRINT "Cuanto dinero en dolares desea retirar?"
+                PRINT "How much money in USD do you want to withdraw?"
                 INPUT dinero
                 totalsav = PatrimonioTotal(1)
                 totalsav = totalsav - dinero
 
                 IF totalsav < 0 THEN
 
-                        PRINT "Usted no tiene ese dinero."
+                        PRINT "You don't have that money."
                         WaitKey
-                        GOTO EndSubMenu2A
+                        GOTO SubMenu2A
 
                 END IF
 
                 IF totalsav >= 0 THEN
 
-                        PRINT "Dinero retirado en U$D. Usted posee un total de: "
+                        PRINT "Money withdrawn in USD. You have a total of: "
                         PatrimonioTotal(1) = totalsav
                         PRINT PatrimonioTotal(1);
                         WaitKey
@@ -907,7 +859,7 @@ SELECT CASE OPCION
                         'Vuelve al ahorroini.
                         'Goes back to the beginning of the program.
 
-                        GOTO EndSubMenu2A
+                        GOTO SubMenu2A
 
                 END IF
 
@@ -923,6 +875,108 @@ SELECT CASE OPCION
 END SELECT
 
 EndSubMenu2A:
+END SUB
+
+SUB SubMenu3
+SubMenu3A:
+
+CLS
+
+COLOR 15, 5
+LOCATE 1, 1
+PRINT "           Savings Control V0.5            "
+PRINT
+
+COLOR 0, 7
+
+PRINT "                                           "
+PRINT " 1- Modify Exchange Rates [ARS|BRL]        "
+PRINT " 2- Change Interest Rates                  "
+PRINT " 3- Reset Data                             "
+PRINT "                                           "
+PRINT " 9- Go Back                                "
+PRINT "                                           "
+
+PRINT
+COLOR 3, 0
+INPUT "* ", OPCION
+
+
+SELECT CASE OPCION
+
+        CASE 1
+
+                SubMenu
+                GOTO SubMenu3A
+
+        CASE 2  'OPCION 2 - CHANGE % INTEREST RATE
+
+                PRINT
+                PRINT "What is the percentage that should be added after a loan?"
+                INPUT "Enter the desired number (10%, 15%, 20%): "; tazadeinteres
+
+                GOTO SubMenu3A
+
+        CASE 3  'OPCION 3 - REINICIAR VARIABLES / RESET DATA
+
+                PRINT
+                PRINT "Are you sure you want to erase all SAVINGS DATA?"
+                PRINT "[10] Yes [11] No"
+                PRINT
+                INPUT OPCION
+
+                SELECT CASE OPCION
+
+                'BORRA TODAS LAS VARIABLES DE AHORROS
+
+                        CASE 10
+                                totalsav = 0
+                                dinero = 0
+                                PatrimonioTotal(0) = 0
+                                PatrimonioTotal(1) = 0
+                                PatrimonioTotal(2) = 0
+                                PatrimonioTotal(3) = 0
+                                prestamo = 0
+                                devolver = 0
+                                interes = 0
+
+
+                                PRINT
+                                PRINT "- All data has been deleted - "
+
+                                WaitKey
+                                GOTO SubMenu3A
+
+                        CASE 11
+
+                                PRINT
+                                PRINT "- Action cancelled - "
+
+                                WaitKey
+                                GOTO SubMenu3A
+
+                        CASE ELSE
+                                PRINT
+                                PRINT "- You have not chosen any possible option -"
+                                PRINT "       Action has been cancelled"
+
+                                WaitKey
+                                GOTO SubMenu3A
+
+                END SELECT
+
+
+        CASE 9
+
+                'Does nothing and finishes the SUB.
+
+        CASE ELSE
+
+                'Does nothing and finishes the SUB.
+
+END SELECT
+
+EndSubMenu3A:
 END SUB
 
 SUB WaitKey
