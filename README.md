@@ -20,3 +20,7 @@ SAVINGS: Simple application that helps you track your savings. Aimed to work wit
 Note: SAVINGS2.BAS is the same program but the FreeBasic version. I had to change some parts of the code to be able to compile it so I could export it to Windows 64 and  Linux.
 
 --------------------
+
+MEMO: Simple FLASH CARDS application that helps you study and memorize an speciffic subject. Still in early development.
+
+--------------------
