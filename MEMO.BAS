@@ -69,6 +69,19 @@ SELECT CASE opcion
 		
 END SELECT
 
+SUB NOTES
+
+'TO DO
+
+' SHOW the correct answer when the answer is wrong.
+' Show the list of content so the user can study
+' Be able to delete an speciffic Flash Card using the CardNumber ID.
+' Create the DATA FILE at the beginning of the program.
+' Create LOAD file sub (load when starting the program)
+' Create SAVE file sub (save when ending the program)
+
+END SUB
+
 SUB Study
 
 CLS
@@ -87,7 +100,7 @@ DO UNTIL xloop = 10
 	PRINT
 	PRINT question(xloop)
 	INPUT UserAnswer
-
+	
 	SELECT CASE UserAnswer
 
 		CASE answer(xloop)
