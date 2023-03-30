@@ -1,12 +1,15 @@
 DECLARE SUB Study ()
 
-DIM SHARED question(0 TO 5) AS STRING
-DIM SHARED answer(0 TO 5) AS STRING
+DIM SHARED question(0 TO 11) AS STRING
+DIM SHARED answer(0 TO 11) AS STRING
 DIM SHARED UserAnswer AS STRING
 DIM SHARED CardNumber AS INTEGER
 
 DIM SHARED opcion AS INTEGER
 DIM SHARED xloop AS INTEGER
+
+DIM SHARED correct AS INTEGER
+DIM SHARED wrong AS INTEGER
 
 CardNumber = 1
 
@@ -31,6 +34,7 @@ CLS
 
 PRINT "1- Add Questions"
 PRINT "2- Study"
+PRINT "3- Quit"
 PRINT
 
 INPUT opcion
@@ -39,6 +43,7 @@ SELECT CASE opcion
 
 	CASE 1
 	
+		PRINT "FLASHCARD #"; CardNumber
 		PRINT "What's the question?"
 		INPUT question(CardNumber)
 		
@@ -52,9 +57,16 @@ SELECT CASE opcion
 	CASE 2
 			
 		Study
-
+		GOTO MainINI
+	
+	CASE 3
+	
+		END
+		
 	CASE ELSE
-
+	
+		GOTO MainINI
+		
 END SELECT
 
 SUB Study
@@ -63,10 +75,16 @@ CLS
 
 xloop = 1
 
-DO UNTIL xloop = 6
+DO UNTIL xloop = 10
 
 	PRINT
 
+	CLS
+
+	LOCATE 1, 1
+	PRINT "Correct: "; correct; " | Wrong: "; wrong;
+
+	PRINT
 	PRINT question(xloop)
 	INPUT UserAnswer
 
@@ -74,18 +92,29 @@ DO UNTIL xloop = 6
 
 		CASE answer(xloop)
 
-			PRINT "that's correct"
+			PRINT "that's correct";
+			correct = correct + 1
 
 		CASE ELSE
 
 			PRINT "That's not correct."
-			PRINT "The right answer is: "; answer(xloop)
+			PRINT "The right answer is: "; answer(xloop);
+			wrong = wrong + 1
 
 	END SELECT
 
-xloop = xloop + 1
+
+	xloop = xloop + 1
+
+	IF xloop = CardNumber THEN '==== Si llega a la ultima pregunta guardada
+				   '     sale del loop.
+		xloop = 0
+		GOTO EndSubStudy
+
+	END IF
 
 LOOP
 
+EndSubStudy:
 END SUB
 
