@@ -1,14 +1,16 @@
+DECLARE SUB Save ()
+DECLARE SUB Load ()
 DECLARE SUB WaitKey ()
 DECLARE SUB Study ()
 DECLARE SUB CreateFile ()
 
-DIM SHARED question(0 TO 11) AS STRING
-DIM SHARED answer(0 TO 11) AS STRING
+DIM SHARED question(0 TO 100) AS STRING
+DIM SHARED answer(0 TO 100) AS STRING
 DIM SHARED UserAnswer AS STRING
 DIM SHARED CardNumber AS INTEGER
 
 DIM SHARED opcion AS INTEGER
-DIM SHARED xloop AS INTEGER
+DIM SHARED counter AS INTEGER
 
 DIM SHARED correct AS INTEGER
 DIM SHARED wrong AS INTEGER
@@ -31,14 +33,17 @@ question(5) = "PURPLE in Spanish"
 answer(5) = "MORADO"
 
 CreateFile
+Load
 
 MainINI:
 
 CLS
 
+LOCATE 3, 1
 PRINT "1- Add Questions"
 PRINT "2- Study"
-PRINT "3- Quit"
+PRINT "3- Delete All Flash Cards"
+PRINT "4- Quit"
 PRINT
 
 INPUT opcion
@@ -62,11 +67,29 @@ SELECT CASE opcion
 			
 		Study
 		GOTO MainINI
-	
+
 	CASE 3
-	
+
+		counter = 1
+
+		DO UNTIL counter = CardNumber
+
+			question(counter) = ""
+			answer(counter) = ""
+
+		counter = counter + 1
+
+		LOOP
+
+		CardNumber = 0
+
+		GOTO MainINI
+
+	CASE 4
+
+		Save
 		END
-		
+	
 	CASE ELSE
 	
 		GOTO MainINI
@@ -88,18 +111,42 @@ IF LOF(1) = 0 THEN
 	CLOSE #1
 	OPEN "memory.dat" FOR OUTPUT AS #1
 
-	xloop = 0
+	counter = 0
 
-	DO UNTIL xloop = 500
+	DO UNTIL counter = 500
 
 		WRITE #1, ""
-		xloop = xloop + 1
+		WRITE #1, ""
+
+		counter = counter + 1
 	
 	LOOP
 
 	PRINT "memory.dat file successfully created."
 
 END IF
+
+CLOSE #1
+
+END SUB
+
+SUB Load
+
+PRINT "Loading..."
+
+OPEN "memory.dat" FOR INPUT AS #1
+
+INPUT #1, CardNumber
+
+counter = 0
+DO UNTIL counter = 10
+	
+	INPUT #1, question(counter)
+	INPUT #1, answer(counter)
+	
+	counter = counter + 1
+
+LOOP
 
 CLOSE #1
 
@@ -133,12 +180,14 @@ OPEN "memory.dat" FOR OUTPUT AS #1
 
 WRITE #1, CardNumber
 
-DO UNTIL xloop = 100
+counter = 1
+
+DO UNTIL counter = 100
 	
-	WRITE #1, question(xloop)
-	WRITE #1, answer(xloop)
+	WRITE #1, question(counter)
+	WRITE #1, answer(counter)
 	
-xloop = xloop + 1
+	counter = counter + 1
 
 LOOP
 
@@ -153,9 +202,9 @@ SUB Study
 
 CLS
 
-xloop = 1
+counter = 1
 
-DO UNTIL xloop = 10
+DO UNTIL counter = 10
 
 	CLS
 
@@ -164,12 +213,12 @@ DO UNTIL xloop = 10
 
 	LOCATE 3, 1
 	
-	PRINT question(xloop)
+	PRINT question(counter)
 	INPUT UserAnswer
 	
 	SELECT CASE UserAnswer
 
-		CASE answer(xloop)
+		CASE answer(counter)
 			
 			PRINT
 			PRINT "that's correct";
@@ -181,7 +230,7 @@ DO UNTIL xloop = 10
 			
 			PRINT
 			PRINT "That's not correct."
-			PRINT "The right answer is: "; answer(xloop);
+			PRINT "The right answer is: "; answer(counter);
 			wrong = wrong + 1
 			
 			WaitKey
@@ -189,11 +238,11 @@ DO UNTIL xloop = 10
 	END SELECT
 
 
-	xloop = xloop + 1
+	counter = counter + 1
 
-	IF xloop = CardNumber THEN '==== Si llega a la ultima pregunta guardada
+	IF counter = CardNumber THEN '==== Si llega a la ultima pregunta guardada
 					       '     sale del loop.
-		xloop = 0
+		counter = 0
 		GOTO EndSubStudy
 
 	END IF
@@ -201,6 +250,10 @@ DO UNTIL xloop = 10
 LOOP
 
 EndSubStudy:
+
+correct = 0
+wrong = 0
+
 END SUB
 
 SUB WaitKey 'Pess any key to continue
