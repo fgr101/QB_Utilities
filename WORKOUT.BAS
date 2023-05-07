@@ -11,6 +11,8 @@ DIM SHARED ExerciseMuscle(5) AS STRING
 DIM SHARED ExerciseTimes(5) AS INTEGER
 DIM SHARED ExerciseRepetitions(5) AS INTEGER
 DIM SHARED Number AS INTEGER
+DIM SHARED opcion AS INTEGER
+DIM SHARED counter AS INTEGER
 
 '===========================================
 
@@ -20,11 +22,11 @@ Load
 '===========================================
 
 MainMenu:
-
+COLOR 7
 CLS
+PRINT "Workout v0.1 - FGR Software - Free & Open Source Project"
 PRINT "Menu. 1) Add Exercise 2) Show Routine 3) Exit"
 INPUT opcion
-
 
 SELECT CASE opcion
 
@@ -55,6 +57,14 @@ SUB AddExercise
 AddExerciseIni:
 
 PRINT "Number of physical Exercises 5."
+PRINT
+PRINT "1- "; ExerciseName(1)
+PRINT "2- "; ExerciseName(2)
+PRINT "3- "; ExerciseName(3)
+PRINT "4- "; ExerciseName(4)
+PRINT "5- "; ExerciseName(5)
+PRINT
+
 INPUT "Exercise Number?", Number
 
 IF Number = 0 THEN
@@ -193,18 +203,23 @@ SUB ShowRoutine
 
 Number = 1
 
-PRINT
+CLS
 
 DO UNTIL Number = 6
 
         IF NOT ExerciseName(Number) = "" THEN
 
-        PRINT "Name: ", ExerciseName(Number)
-        PRINT "Body Part: ", ExerciseMuscle(Number)
-        PRINT "Set:", ExerciseTimes(Number)
-        PRINT "Repetitions:", ExerciseRepetitions(Number)
+        COLOR 15
 
         PRINT
+        PRINT "Name: "; ExerciseName(Number)
+        PRINT "Body Part: "; ExerciseMuscle(Number)
+        PRINT "Repetitions: "; ExerciseTimes(Number); "x"; ExerciseRepetitions(Number)
+
+        PRINT
+
+        COLOR 10
+        PRINT "======================================="
 
         DO WHILE INKEY$ = ""
         LOOP
