@@ -26,7 +26,7 @@ Load
 MainMenu:
 COLOR 7
 CLS
-PRINT "Workout v0.1 - FGR Software - Free & Open Source Project"
+PRINT "Workout v0.2 - FGR Software - Free & Open Source Project"
 PRINT "Menu. 1) Add Exercise 2) Show Routine 3) Exit"
 INPUT opcion
 
@@ -166,6 +166,23 @@ CLOSE #1
 
 PRINT
 PRINT "Loading..."
+
+END SUB
+
+SUB Notes
+
+'v 0.2
+
+'- Routines up to 6 exercises.
+'- 1 more slot for an exercise available.
+'- WEIGHT details added to routines.
+
+'v 0.1
+
+'- Program basic structure created.
+'- Routines up to 5 exercises.
+'- NAME, BODY PART & REPETITION details added to routines.
+'- 5 slots for exercises available. You can modify them.
 
 END SUB
 
