@@ -1,15 +1,17 @@
-DECLARE SUB Save ()
+DECLARE SUB SAVE ()
 DECLARE SUB Load ()
 DECLARE SUB CreateFile ()
 
 DECLARE SUB AddExercise ()
 DECLARE SUB ShowRoutine ()
 
-DIM SHARED ExerciseName(5) AS STRING
-DIM SHARED ExerciseMuscle(5) AS STRING
+DIM SHARED ExerciseName(6) AS STRING
+DIM SHARED ExerciseMuscle(6) AS STRING
+DIM SHARED ExerciseWeight(6) AS STRING
+DIM SHARED ExerciseTimes(6) AS STRING
 
-DIM SHARED ExerciseTimes(5) AS INTEGER
-DIM SHARED ExerciseRepetitions(5) AS INTEGER
+DIM SHARED ExerciseRepetitions(6) AS INTEGER
+
 DIM SHARED Number AS INTEGER
 DIM SHARED opcion AS INTEGER
 DIM SHARED counter AS INTEGER
@@ -33,7 +35,7 @@ SELECT CASE opcion
         CASE 1
 
                 AddExercise
-                Save
+                SAVE
                 GOTO MainMenu
 
         CASE 2
@@ -56,13 +58,14 @@ SUB AddExercise
 
 AddExerciseIni:
 
-PRINT "Number of physical Exercises 5."
+PRINT "Number of physical Exercises 6."
 PRINT
 PRINT "1- "; ExerciseName(1)
 PRINT "2- "; ExerciseName(2)
 PRINT "3- "; ExerciseName(3)
 PRINT "4- "; ExerciseName(4)
 PRINT "5- "; ExerciseName(5)
+PRINT "6- "; ExerciseName(6)
 PRINT
 
 INPUT "Exercise Number?", Number
@@ -76,10 +79,12 @@ END IF
 
 PRINT
 
-INPUT "Name: ", ExerciseName(Number)
-INPUT "Body Part: ", ExerciseMuscle(Number)
-INPUT "Set:", ExerciseTimes(Number)
+LINE INPUT "Name: ", ExerciseName(Number)
+LINE INPUT "Body Part: ", ExerciseMuscle(Number)
+LINE INPUT "Set:", ExerciseTimes(Number)
 INPUT "Repetitions:", ExerciseRepetitions(Number)
+LINE INPUT "Weight:", ExerciseWeight(Number)
+
 
 END SUB
 
@@ -144,13 +149,14 @@ OPEN "workout.dat" FOR INPUT AS #1
 
 counter = 0  '================ LOADING REMINDERS
 
-DO UNTIL counter = 5
+DO UNTIL counter = 6
 
 
         INPUT #1, ExerciseName(counter)
         INPUT #1, ExerciseMuscle(counter)
         INPUT #1, ExerciseTimes(counter)
         INPUT #1, ExerciseRepetitions(counter)
+        INPUT #1, ExerciseWeight(counter)
 
         counter = counter + 1
 
@@ -166,18 +172,20 @@ END SUB
 ' ================= SAVE ==========================
 ' Saves PROGRAM variables into the brain.dat file.
 '
-SUB Save
+SUB SAVE
 
 OPEN "workout.dat" FOR OUTPUT AS #1
 
 counter = 0 ' ======================== SAVING ROUTINE
 
-DO UNTIL counter = 5
+DO UNTIL counter = 6
 
         WRITE #1, ExerciseName(counter)
         WRITE #1, ExerciseMuscle(counter)
         WRITE #1, ExerciseTimes(counter)
         WRITE #1, ExerciseRepetitions(counter)
+        WRITE #1, ExerciseWeight(counter)
+
         counter = counter + 1
 
 LOOP
@@ -205,7 +213,7 @@ Number = 1
 
 CLS
 
-DO UNTIL Number = 6
+DO UNTIL Number >= 7
 
         IF NOT ExerciseName(Number) = "" THEN
 
@@ -214,7 +222,13 @@ DO UNTIL Number = 6
         PRINT
         PRINT "Name: "; ExerciseName(Number)
         PRINT "Body Part: "; ExerciseMuscle(Number)
-        PRINT "Repetitions: "; ExerciseTimes(Number); "x"; ExerciseRepetitions(Number)
+        PRINT "Repetitions: "; ExerciseTimes(Number); " x"; ExerciseRepetitions(Number)
+
+        IF NOT ExerciseWeight(Number) = "" THEN
+
+                PRINT "Weight: "; ExerciseWeight(Number)
+        
+        END IF
 
         PRINT
 
