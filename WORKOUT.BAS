@@ -12,9 +12,17 @@ DIM SHARED ExerciseTimes(6) AS STRING
 
 DIM SHARED ExerciseRepetitions(6) AS INTEGER
 
-DIM SHARED Number AS INTEGER
-DIM SHARED opcion AS INTEGER
-DIM SHARED counter AS INTEGER
+DIM SHARED number AS integer
+DIM SHARED opcion AS integer
+DIM SHARED counter AS integer
+
+DIM SHARED rndNumber AS INTEGER
+DIM SHARED rndNumberSaved(6) AS INTEGER
+
+'BOOLEANS FOR OPTIONS -> TRUE 1 | FALSE 0
+
+DIM SHARED BooleanOrderRND AS INTEGER
+DIM duplicateFound AS INTEGER
 
 '===========================================
 
@@ -32,24 +40,24 @@ INPUT opcion
 
 SELECT CASE opcion
 
-        CASE 1
+	CASE 1
 
-                AddExercise
-                SAVE
-                GOTO MainMenu
+		AddExercise
+		SAVE
+		GOTO MainMenu
 
-        CASE 2
+	CASE 2
 
-                ShowRoutine
-                GOTO MainMenu
+		ShowRoutine
+		GOTO MainMenu
 
-        CASE 3
+	CASE 3
 
-                END
+		END
 
-        CASE ELSE
+	CASE ELSE
 
-                GOTO MainMenu
+		GOTO MainMenu
 
 END SELECT
 
@@ -68,22 +76,22 @@ PRINT "5- "; ExerciseName(5)
 PRINT "6- "; ExerciseName(6)
 PRINT
 
-INPUT "Exercise Number?", Number
+INPUT "Exercise Number?", number
 
-IF Number = 0 THEN
+IF number = 0 THEN
 
-        PRINT
-        GOTO AddExerciseIni
+	PRINT
+	GOTO AddExerciseIni
 
 END IF
 
 PRINT
 
-LINE INPUT "Name: ", ExerciseName(Number)
-LINE INPUT "Body Part: ", ExerciseMuscle(Number)
-LINE INPUT "Set:", ExerciseTimes(Number)
-INPUT "Repetitions:", ExerciseRepetitions(Number)
-LINE INPUT "Weight:", ExerciseWeight(Number)
+LINE INPUT "Name: ", ExerciseName(number)
+LINE INPUT "Body Part: ", ExerciseMuscle(number)
+LINE INPUT "Set:", ExerciseTimes(number)
+INPUT "Repetitions:", ExerciseRepetitions(number)
+LINE INPUT "Weight:", ExerciseWeight(number)
 
 
 END SUB
@@ -152,13 +160,13 @@ counter = 0  '================ LOADING REMINDERS
 DO UNTIL counter = 6
 
 
-        INPUT #1, ExerciseName(counter)
-        INPUT #1, ExerciseMuscle(counter)
-        INPUT #1, ExerciseTimes(counter)
-        INPUT #1, ExerciseRepetitions(counter)
-        INPUT #1, ExerciseWeight(counter)
+	INPUT #1, ExerciseName(counter)
+	INPUT #1, ExerciseMuscle(counter)
+	INPUT #1, ExerciseTimes(counter)
+	INPUT #1, ExerciseRepetitions(counter)
+	INPUT #1, ExerciseWeight(counter)
 
-        counter = counter + 1
+	counter = counter + 1
 
 LOOP
 
@@ -197,13 +205,13 @@ counter = 0 ' ======================== SAVING ROUTINE
 
 DO UNTIL counter = 6
 
-        WRITE #1, ExerciseName(counter)
-        WRITE #1, ExerciseMuscle(counter)
-        WRITE #1, ExerciseTimes(counter)
-        WRITE #1, ExerciseRepetitions(counter)
-        WRITE #1, ExerciseWeight(counter)
+	WRITE #1, ExerciseName(counter)
+	WRITE #1, ExerciseMuscle(counter)
+	WRITE #1, ExerciseTimes(counter)
+	WRITE #1, ExerciseRepetitions(counter)
+	WRITE #1, ExerciseWeight(counter)
 
-        counter = counter + 1
+	counter = counter + 1
 
 LOOP
 
@@ -226,40 +234,135 @@ END SUB
 
 SUB ShowRoutine
 
-Number = 1
-
+number = 0
+BooleanOrderRND = 1    '1 TRUE for RANDOM ORDER
+		       '0 FALSE for NON RANDOM ORDER
 CLS
 
-DO UNTIL Number >= 7
+IF BooleanOrderRND = 0 THEN
 
-        IF NOT ExerciseName(Number) = "" THEN
+	PRINT "BooleanOrderRND = 0"
+	PRINT
 
-        COLOR 15
+	DO UNTIL number >= 7
 
-        PRINT
-        PRINT "Name: "; ExerciseName(Number)
-        PRINT "Body Part: "; ExerciseMuscle(Number)
-        PRINT "Repetitions: "; ExerciseTimes(Number); " x"; ExerciseRepetitions(Number)
+		IF NOT ExerciseName(number) = "" THEN
 
-        IF NOT ExerciseWeight(Number) = "" THEN
+			COLOR 15
 
-                PRINT "Weight: "; ExerciseWeight(Number)
-        
-        END IF
+			PRINT
+			PRINT "Name: "; ExerciseName(number)
+			PRINT "Body Part: "; ExerciseMuscle(number)
+			PRINT "Repetitions: "; ExerciseTimes(number); " x"; ExerciseRepetitions(number)
 
-        PRINT
+			IF NOT ExerciseWeight(number) = "" THEN
 
-        COLOR 10
-        PRINT "======================================="
+				PRINT "Weight: "; ExerciseWeight(number)
+	
+			END IF
 
-        DO WHILE INKEY$ = ""
-        LOOP
+			PRINT
 
-        END IF
+			COLOR 10
+			PRINT "======================================="
 
-        Number = Number + 1
-        
+			DO WHILE INKEY$ = ""
+			LOOP
+
+		END IF
+
+		number = number + 1
+	
+	LOOP
+
+END IF
+
+
+'============================== RANDOM ORDER =================================
+
+counter = 0
+
+DO UNTIL counter = 7  'CAMBIAR SI CAMBIA CANTIDAD DE EJERCICIOS
+
+	IF ExerciseName(counter) <> "" THEN
+
+		ExercisesNumber = ExercisesNumber + 1
+
+	END IF
+
+	counter = counter + 1
+
 LOOP
+
+counter = 0
+
+
+'===========================================
+
+IF BooleanOrderRND = 1 THEN
+
+    DO UNTIL number >= ExercisesNumber
+
+	rndNumber = INT(RND * 6) + 1
+	rndNumberSaved(number) = rndNumber
+
+	IF ExerciseName(rndNumber) <> "" THEN
+	    
+	    duplicateFound = 0
+						
+	    FOR i = 0 TO number - 1
+
+		IF rndNumber = rndNumberSaved(i) THEN
+
+		    duplicateFound = 1
+		    EXIT FOR
+
+		END IF
+
+	    NEXT i
+
+	    IF duplicateFound = 0 THEN
+
+		' Display exercise details here
+		' ...
+
+		COLOR 15
+		PRINT
+		PRINT "Name: "; ExerciseName(rndNumber)
+		PRINT "Body Part: "; ExerciseMuscle(rndNumber)
+		PRINT "Repetitions: "; ExerciseTimes(rndNumber); " x"; ExerciseRepetitions(rndNumber)
+
+		IF NOT ExerciseWeight(rndNumber) = "" THEN
+
+		    PRINT "Weight: "; ExerciseWeight(rndNumber)
+
+		END IF
+
+		PRINT
+
+		COLOR 10
+		PRINT "======================================="
+
+		DO WHILE INKEY$ = ""
+		LOOP
+
+		COLOR 7
+		
+		number = number + 1
+
+	    END IF
+	
+	ELSE
+	
+	END IF
+
+    LOOP
+
+END IF
+
+number = 0
+rndNumber = 0
+rndNumberSaved = 0
 
 END SUB
 
