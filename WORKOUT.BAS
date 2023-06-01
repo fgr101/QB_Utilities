@@ -12,17 +12,19 @@ DIM SHARED ExerciseTimes(6) AS STRING
 
 DIM SHARED ExerciseRepetitions(6) AS INTEGER
 
-DIM SHARED number AS integer
-DIM SHARED opcion AS integer
-DIM SHARED counter AS integer
+DIM SHARED number AS INTEGER
+DIM SHARED opcion AS INTEGER
+DIM SHARED counter AS INTEGER
 
+DIM SHARED i AS INTEGER
+DIM SHARED ExercisesNumber AS INTEGER
 DIM SHARED rndNumber AS INTEGER
 DIM SHARED rndNumberSaved(6) AS INTEGER
 
 'BOOLEANS FOR OPTIONS -> TRUE 1 | FALSE 0
 
 DIM SHARED BooleanOrderRND AS INTEGER
-DIM duplicateFound AS INTEGER
+DIM SHARED duplicateFound AS INTEGER
 
 '===========================================
 
@@ -360,9 +362,20 @@ IF BooleanOrderRND = 1 THEN
 
 END IF
 
-number = 0
+
+number = 0 '=========== RESTORING USED VARIABLES TO 0 ==================
 rndNumber = 0
-rndNumberSaved = 0
+
+counter = 0
+
+DO UNTIL counter = ExercisesNumber
+
+	rndNumberSaved(counter) = 0
+	counter = counter + 1
+
+LOOP
+
+counter = 0
 
 END SUB
 
