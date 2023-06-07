@@ -1,3 +1,5 @@
+DECLARE SUB PrintOptions ()
+DECLARE SUB DifficultySwitcher ()
 DECLARE SUB SAVE ()
 DECLARE SUB Load ()
 DECLARE SUB CreateFile ()
@@ -5,11 +7,17 @@ DECLARE SUB CreateFile ()
 DECLARE SUB AddExercise ()
 DECLARE SUB ShowRoutine ()
 
+'================
+
+RANDOMIZE TIMER
+
+'================
+
 DIM SHARED ExerciseName(6) AS STRING
 DIM SHARED ExerciseMuscle(6) AS STRING
 DIM SHARED ExerciseWeight(6) AS STRING
-DIM SHARED ExerciseTimes(6) AS STRING
 
+DIM SHARED ExerciseTimes(6) AS INTEGER
 DIM SHARED ExerciseRepetitions(6) AS INTEGER
 
 DIM SHARED number AS INTEGER
@@ -24,6 +32,10 @@ DIM SHARED rndNumberSaved(6) AS INTEGER
 'BOOLEANS FOR OPTIONS -> TRUE 1 | FALSE 0
 
 DIM SHARED BooleanOrderRND AS INTEGER
+DIM SHARED SwitchDifficulty AS INTEGER
+DIM SHARED rndDifficultyA AS INTEGER
+DIM SHARED rndDifficultyB AS INTEGER
+
 DIM SHARED duplicateFound AS INTEGER
 
 '===========================================
@@ -91,7 +103,7 @@ PRINT
 
 LINE INPUT "Name: ", ExerciseName(number)
 LINE INPUT "Body Part: ", ExerciseMuscle(number)
-LINE INPUT "Set:", ExerciseTimes(number)
+INPUT "Set:", ExerciseTimes(number)
 INPUT "Repetitions:", ExerciseRepetitions(number)
 LINE INPUT "Weight:", ExerciseWeight(number)
 
@@ -149,6 +161,35 @@ CLOSE #1
 
 END SUB
 
+SUB DifficultySwitcher
+
+SELECT CASE SwitchDifficulty  'DIFFICULTY SWITCHER
+
+	CASE 0
+
+	rndDifficultyA = 0
+	rndDifficultyB = 0
+	
+	CASE 1
+
+	rndDifficultyA = INT(RND * 2) + 1
+	rndDifficultyB = INT(RND * 2) + 1
+
+	CASE 2
+
+	rndDifficultyA = INT(RND * 4) + 1
+	rndDifficultyB = INT(RND * 4) + 1
+
+	CASE 3
+
+	rndDifficultyA = INT(RND * 7) + 1
+	rndDifficultyB = INT(RND * 7) + 1
+
+
+END SELECT
+
+END SUB
+
 SUB Load
 
 '====================== LOAD ======================
@@ -196,6 +237,43 @@ SUB Notes
 
 END SUB
 
+SUB PrintOptions
+
+PRINT "Random Order: ";
+
+SELECT CASE BooleanOrderRND
+
+	CASE 0
+	PRINT "DISABLED";
+
+	CASE 1
+	PRINT "ENABLED";
+
+END SELECT
+
+PRINT " | ";
+
+PRINT "Difficulty: ";
+
+SELECT CASE SwitchDifficulty
+
+	CASE 0
+	PRINT "DISABLED";
+
+	CASE 1
+	PRINT "EASY";
+
+	CASE 2
+	PRINT "MEDIUM";
+
+	CASE 3
+	PRINT "HARD"
+
+END SELECT
+
+
+END SUB
+
 ' ================= SAVE ==========================
 ' Saves PROGRAM variables into the brain.dat file.
 '
@@ -237,25 +315,27 @@ END SUB
 SUB ShowRoutine
 
 number = 0
-BooleanOrderRND = 1    '1 TRUE for RANDOM ORDER
-		       '0 FALSE for NON RANDOM ORDER
+BooleanOrderRND = 0  'RANDOM ORDER: 0 DISABLED | 1 ENABLED
+SwitchDifficulty = 3 'DIFFICULTY: 0 DISABLED | 1 EASY | 2 MEDIUM | 3 HARD
+
 CLS
 
-IF BooleanOrderRND = 0 THEN
+PrintOptions
 
-	PRINT "BooleanOrderRND = 0"
-	PRINT
+IF BooleanOrderRND = 0 THEN
 
 	DO UNTIL number >= 7
 
 		IF NOT ExerciseName(number) = "" THEN
+
+			DifficultySwitcher
 
 			COLOR 15
 
 			PRINT
 			PRINT "Name: "; ExerciseName(number)
 			PRINT "Body Part: "; ExerciseMuscle(number)
-			PRINT "Repetitions: "; ExerciseTimes(number); " x"; ExerciseRepetitions(number)
+			PRINT "Repetitions: "; ExerciseTimes(number) + rndDifficultyA; " x"; ExerciseRepetitions(number) + rndDifficultyB
 
 			IF NOT ExerciseWeight(number) = "" THEN
 
@@ -298,7 +378,6 @@ LOOP
 
 counter = 0
 
-
 '===========================================
 
 IF BooleanOrderRND = 1 THEN
@@ -325,6 +404,8 @@ IF BooleanOrderRND = 1 THEN
 
 	    IF duplicateFound = 0 THEN
 
+		DifficultySwitcher
+
 		' Display exercise details here
 		' ...
 
@@ -332,7 +413,7 @@ IF BooleanOrderRND = 1 THEN
 		PRINT
 		PRINT "Name: "; ExerciseName(rndNumber)
 		PRINT "Body Part: "; ExerciseMuscle(rndNumber)
-		PRINT "Repetitions: "; ExerciseTimes(rndNumber); " x"; ExerciseRepetitions(rndNumber)
+		PRINT "Repetitions: "; ExerciseTimes(rndNumber) + rndDifficultyA; " x"; ExerciseRepetitions(rndNumber) + rndDifficultyB
 
 		IF NOT ExerciseWeight(rndNumber) = "" THEN
 
