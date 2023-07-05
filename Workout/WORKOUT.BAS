@@ -1,3 +1,4 @@
+DECLARE SUB EditExercise ()
 DECLARE SUB PrintOptions ()
 DECLARE SUB DifficultySwitcher ()
 DECLARE SUB SAVE ()
@@ -18,7 +19,7 @@ DIM SHARED ExerciseMuscle(6) AS STRING
 DIM SHARED ExerciseWeight(6) AS STRING
 
 DIM SHARED ExerciseTimes(6) AS INTEGER
-DIM SHARED ExerciseRepetitions(6) AS INTEGER
+DIM SHARED ExerciseSets(6) AS INTEGER
 
 DIM SHARED number AS INTEGER
 DIM SHARED opcion AS INTEGER
@@ -49,7 +50,11 @@ MainMenu:
 COLOR 7
 CLS
 PRINT "Workout v0.2 - FGR Software - Free & Open Source Project"
-PRINT "Menu. 1) Add Exercise 2) Show Routine 3) Exit"
+PRINT
+PRINT "Menu. "
+PRINT
+PRINT "1) Add Exercise 2) Edit Exercise 3) Show Routine"
+PRINT "4) Exit"
 INPUT opcion
 
 SELECT CASE opcion
@@ -62,10 +67,16 @@ SELECT CASE opcion
 
 	CASE 2
 
+		EditExercise
+		SAVE
+		GOTO MainMenu
+	
+	CASE 3
+
 		ShowRoutine
 		GOTO MainMenu
 
-	CASE 3
+	CASE 4
 
 		END
 
@@ -103,8 +114,8 @@ PRINT
 
 LINE INPUT "Name: ", ExerciseName(number)
 LINE INPUT "Body Part: ", ExerciseMuscle(number)
-INPUT "Set:", ExerciseTimes(number)
-INPUT "Repetitions:", ExerciseRepetitions(number)
+INPUT "Repetitions:", ExerciseTimes(number)
+INPUT "Sets:", ExerciseSets(number)
 LINE INPUT "Weight:", ExerciseWeight(number)
 
 
@@ -190,6 +201,55 @@ END SELECT
 
 END SUB
 
+SUB EditExercise
+
+EditExerciseIni:
+
+PRINT "Number of physical Exercises 6."
+PRINT
+
+counter = 1
+
+DO UNTIL counter = 7
+PRINT counter; "-"; ExerciseName(counter)
+counter = counter + 1
+LOOP
+
+PRINT
+
+INPUT "Exercise Number?", number
+
+IF number = 0 THEN
+
+	PRINT
+	GOTO EditExerciseIni
+
+END IF
+
+PRINT
+
+PRINT "Name: "; ExerciseName(number)
+PRINT "Body Part: "; ExerciseMuscle(number)
+PRINT "Repetitions x Sets: "; ExerciseTimes(number) + rndDifficultyA; " x"; ExerciseSets(number) + rndDifficultyB
+
+PRINT
+COLOR 10
+PRINT "======================================="
+PRINT
+
+LINE INPUT "Name: ", ExerciseName(number)
+LINE INPUT "Body Part: ", ExerciseMuscle(number)
+INPUT "Repetitions:", ExerciseTimes(number)
+INPUT "Sets:", ExerciseSets(number)
+LINE INPUT "Weight:", ExerciseWeight(number)
+
+
+
+
+
+
+END SUB
+
 SUB Load
 
 '====================== LOAD ======================
@@ -206,7 +266,7 @@ DO UNTIL counter = 6
 	INPUT #1, ExerciseName(counter)
 	INPUT #1, ExerciseMuscle(counter)
 	INPUT #1, ExerciseTimes(counter)
-	INPUT #1, ExerciseRepetitions(counter)
+	INPUT #1, ExerciseSets(counter)
 	INPUT #1, ExerciseWeight(counter)
 
 	counter = counter + 1
@@ -224,6 +284,11 @@ SUB Notes
 
 'v 0.2
 
+'- OPTIONS --> Difficulty levels
+'- OPTIONS --> Exercises can be shown randomly
+'- EDIT EXERCISE option created.
+'- Correction --> [Reps and Sets] instead of [Times and Repetitions]
+'- BUG [Error after showing routine more than twice] FIXED.
 '- Routines up to 6 exercises.
 '- 1 more slot for an exercise available.
 '- WEIGHT details added to routines.
@@ -288,7 +353,7 @@ DO UNTIL counter = 6
 	WRITE #1, ExerciseName(counter)
 	WRITE #1, ExerciseMuscle(counter)
 	WRITE #1, ExerciseTimes(counter)
-	WRITE #1, ExerciseRepetitions(counter)
+	WRITE #1, ExerciseSets(counter)
 	WRITE #1, ExerciseWeight(counter)
 
 	counter = counter + 1
@@ -314,6 +379,7 @@ END SUB
 
 SUB ShowRoutine
 
+ExercisesNumber = 0
 number = 0
 BooleanOrderRND = 0  'RANDOM ORDER: 0 DISABLED | 1 ENABLED
 SwitchDifficulty = 3 'DIFFICULTY: 0 DISABLED | 1 EASY | 2 MEDIUM | 3 HARD
@@ -335,7 +401,7 @@ IF BooleanOrderRND = 0 THEN
 			PRINT
 			PRINT "Name: "; ExerciseName(number)
 			PRINT "Body Part: "; ExerciseMuscle(number)
-			PRINT "Repetitions: "; ExerciseTimes(number) + rndDifficultyA; " x"; ExerciseRepetitions(number) + rndDifficultyB
+			PRINT "Repetitions x Sets: "; ExerciseTimes(number) + rndDifficultyA; " x"; ExerciseSets(number) + rndDifficultyB
 
 			IF NOT ExerciseWeight(number) = "" THEN
 
@@ -366,7 +432,7 @@ counter = 0
 
 DO UNTIL counter = 7  'CAMBIAR SI CAMBIA CANTIDAD DE EJERCICIOS
 
-	IF ExerciseName(counter) <> "" THEN
+	IF ExerciseName(counter) <> "" AND NOT counter = 7 THEN
 
 		ExercisesNumber = ExercisesNumber + 1
 
@@ -413,7 +479,7 @@ IF BooleanOrderRND = 1 THEN
 		PRINT
 		PRINT "Name: "; ExerciseName(rndNumber)
 		PRINT "Body Part: "; ExerciseMuscle(rndNumber)
-		PRINT "Repetitions: "; ExerciseTimes(rndNumber) + rndDifficultyA; " x"; ExerciseRepetitions(rndNumber) + rndDifficultyB
+		PRINT "Repetitions x Sets:  "; ExerciseTimes(rndNumber) + rndDifficultyA; " x"; ExerciseSets(rndNumber) + rndDifficultyB
 
 		IF NOT ExerciseWeight(rndNumber) = "" THEN
 
