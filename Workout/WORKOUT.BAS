@@ -54,7 +54,7 @@ PRINT
 PRINT "Menu. "
 PRINT
 PRINT "1) Add Exercise 2) Edit Exercise 3) Show Routine"
-PRINT "4) Exit"
+PRINT "0) Exit"
 INPUT opcion
 
 SELECT CASE opcion
@@ -76,7 +76,7 @@ SELECT CASE opcion
 		ShowRoutine
 		GOTO MainMenu
 
-	CASE 4
+	CASE 0
 
 		END
 
@@ -91,21 +91,31 @@ SUB AddExercise
 
 AddExerciseIni:
 
+CLS
+PRINT "ADD EXERCISE"
+PRINT
 PRINT "Number of physical Exercises 6."
 PRINT
-PRINT "1- "; ExerciseName(1)
-PRINT "2- "; ExerciseName(2)
-PRINT "3- "; ExerciseName(3)
-PRINT "4- "; ExerciseName(4)
-PRINT "5- "; ExerciseName(5)
-PRINT "6- "; ExerciseName(6)
+PRINT " 1 - "; ExerciseName(1)
+PRINT " 2 - "; ExerciseName(2)
+PRINT " 3 - "; ExerciseName(3)
+PRINT " 4 - "; ExerciseName(4)
+PRINT " 5 - "; ExerciseName(5)
+PRINT " 6 - "; ExerciseName(6)
+PRINT
+PRINT " 0 - Exit"
 PRINT
 
-INPUT "Exercise Number?", number
+INPUT "Exercise Number? ", number
 
 IF number = 0 THEN
+	
+	GOTO AddExerciseEndSub ' Exit the AddExercise subroutine
 
-	PRINT
+END IF
+
+IF number < 1 OR number > 6 THEN
+
 	GOTO AddExerciseIni
 
 END IF
@@ -118,7 +128,7 @@ INPUT "Repetitions:", ExerciseTimes(number)
 INPUT "Sets:", ExerciseSets(number)
 LINE INPUT "Weight:", ExerciseWeight(number)
 
-
+AddExerciseEndSub:
 END SUB
 
 SUB CreateFile
@@ -205,23 +215,33 @@ SUB EditExercise
 
 EditExerciseIni:
 
+CLS
+PRINT "EDIT EXERCISE"
+PRINT
 PRINT "Number of physical Exercises 6."
 PRINT
 
 counter = 1
 
 DO UNTIL counter = 7
-PRINT counter; "-"; ExerciseName(counter)
+PRINT counter; "- "; ExerciseName(counter)
 counter = counter + 1
 LOOP
 
 PRINT
+PRINT " 0 - Exit"
+PRINT
 
-INPUT "Exercise Number?", number
+INPUT "Exercise Number? ", number
 
 IF number = 0 THEN
+	
+	GOTO EditExerciseEndSub ' Exit the EditExercise subroutine
 
-	PRINT
+END IF
+
+IF number < 1 OR number > 6 THEN
+
 	GOTO EditExerciseIni
 
 END IF
@@ -230,7 +250,7 @@ PRINT
 
 PRINT "Name: "; ExerciseName(number)
 PRINT "Body Part: "; ExerciseMuscle(number)
-PRINT "Repetitions x Sets: "; ExerciseTimes(number) + rndDifficultyA; " x"; ExerciseSets(number) + rndDifficultyB
+PRINT "Reps x Sets:"; ExerciseTimes(number) + rndDifficultyA; " x"; ExerciseSets(number) + rndDifficultyB
 
 PRINT
 COLOR 10
@@ -243,10 +263,7 @@ INPUT "Repetitions:", ExerciseTimes(number)
 INPUT "Sets:", ExerciseSets(number)
 LINE INPUT "Weight:", ExerciseWeight(number)
 
-
-
-
-
+EditExerciseEndSub:
 
 END SUB
 
@@ -284,6 +301,8 @@ SUB Notes
 
 'v 0.2
 
+'- Implemented user input validation, added exit options, and improved
+'  menu display for better user interaction.
 '- OPTIONS --> Difficulty levels
 '- OPTIONS --> Exercises can be shown randomly
 '- EDIT EXERCISE option created.
@@ -401,7 +420,7 @@ IF BooleanOrderRND = 0 THEN
 			PRINT
 			PRINT "Name: "; ExerciseName(number)
 			PRINT "Body Part: "; ExerciseMuscle(number)
-			PRINT "Repetitions x Sets: "; ExerciseTimes(number) + rndDifficultyA; " x"; ExerciseSets(number) + rndDifficultyB
+			PRINT "Reps x Sets:"; ExerciseTimes(number) + rndDifficultyA; " x"; ExerciseSets(number) + rndDifficultyB
 
 			IF NOT ExerciseWeight(number) = "" THEN
 
@@ -479,7 +498,7 @@ IF BooleanOrderRND = 1 THEN
 		PRINT
 		PRINT "Name: "; ExerciseName(rndNumber)
 		PRINT "Body Part: "; ExerciseMuscle(rndNumber)
-		PRINT "Repetitions x Sets:  "; ExerciseTimes(rndNumber) + rndDifficultyA; " x"; ExerciseSets(rndNumber) + rndDifficultyB
+		PRINT "Reps x Sets:"; ExerciseTimes(rndNumber) + rndDifficultyA; " x"; ExerciseSets(rndNumber) + rndDifficultyB
 
 		IF NOT ExerciseWeight(rndNumber) = "" THEN
 
