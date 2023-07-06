@@ -1,3 +1,11 @@
+'================
+
+'CONSTANTS
+
+CONST MaxExercise = 6
+
+'================
+
 DECLARE SUB EditExercise ()
 DECLARE SUB PrintOptions ()
 DECLARE SUB DifficultySwitcher ()
@@ -14,12 +22,12 @@ RANDOMIZE TIMER
 
 '================
 
-DIM SHARED ExerciseName(6) AS STRING
-DIM SHARED ExerciseMuscle(6) AS STRING
-DIM SHARED ExerciseWeight(6) AS STRING
+DIM SHARED ExerciseName(MaxExercise) AS STRING
+DIM SHARED ExerciseMuscle(MaxExercise) AS STRING
+DIM SHARED ExerciseWeight(MaxExercise) AS STRING
 
-DIM SHARED ExerciseTimes(6) AS INTEGER
-DIM SHARED ExerciseSets(6) AS INTEGER
+DIM SHARED ExerciseTimes(MaxExercise) AS INTEGER
+DIM SHARED ExerciseSets(MaxExercise) AS INTEGER
 
 DIM SHARED number AS INTEGER
 DIM SHARED opcion AS INTEGER
@@ -28,7 +36,7 @@ DIM SHARED counter AS INTEGER
 DIM SHARED i AS INTEGER
 DIM SHARED ExercisesNumber AS INTEGER
 DIM SHARED rndNumber AS INTEGER
-DIM SHARED rndNumberSaved(6) AS INTEGER
+DIM SHARED rndNumberSaved(MaxExercise) AS INTEGER
 
 'BOOLEANS FOR OPTIONS -> TRUE 1 | FALSE 0
 
@@ -47,6 +55,7 @@ Load
 '===========================================
 
 MainMenu:
+
 COLOR 7
 CLS
 PRINT "Workout v0.2 - FGR Software - Free & Open Source Project"
@@ -88,6 +97,8 @@ END SELECT
 
 SUB AddExercise
 
+' Subroutine: AddExercise
+' Description: Allows the user to add a new exercise to the program.
 
 AddExerciseIni:
 
@@ -107,17 +118,18 @@ PRINT " 0 - Exit"
 PRINT
 
 INPUT "Exercise Number? ", number
+				
 
 IF number = 0 THEN
 	
-	GOTO AddExerciseEndSub ' Exit the AddExercise subroutine
-
+	GOTO AddExerciseEndSub
+	
 END IF
 
 IF number < 1 OR number > 6 THEN
 
 	GOTO AddExerciseIni
-
+				   
 END IF
 
 PRINT
@@ -213,12 +225,15 @@ END SUB
 
 SUB EditExercise
 
+' Subroutine: EditExercise
+' Description: Allows the user to edit an existing exercise.
+
 EditExerciseIni:
 
 CLS
 PRINT "EDIT EXERCISE"
 PRINT
-PRINT "Number of physical Exercises 6."
+PRINT "Number of physical Exercises"; MaxExercise; "."
 PRINT
 
 counter = 1
@@ -301,6 +316,8 @@ SUB Notes
 
 'v 0.2
 
+'- Introduced the use of the constant [MaxExercise] to improve code
+'  readability and maintainability.
 '- Implemented user input validation, added exit options, and improved
 '  menu display for better user interaction.
 '- OPTIONS --> Difficulty levels
@@ -409,7 +426,7 @@ PrintOptions
 
 IF BooleanOrderRND = 0 THEN
 
-	DO UNTIL number >= 7
+	DO UNTIL number >= MaxExercise + 1
 
 		IF NOT ExerciseName(number) = "" THEN
 
@@ -469,7 +486,7 @@ IF BooleanOrderRND = 1 THEN
 
     DO UNTIL number >= ExercisesNumber
 
-	rndNumber = INT(RND * 6) + 1
+	rndNumber = INT(RND * MaxExercise) + 1
 	rndNumberSaved(number) = rndNumber
 
 	IF ExerciseName(rndNumber) <> "" THEN
